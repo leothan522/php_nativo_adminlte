@@ -12,32 +12,39 @@ function sidebar($modulo = null): ?string
             'permiso' => true,
             'url' => public_url('admin'),
             'active' => $modulo == 'dashboard',
-            'icono' => '<i class="nav-icon fas fa-home"></i>',
+            'icono' => '<i class="fas fa-tachometer-alt"></i> ',
             'titulo' => 'Dashboard',
             'badge' => null,
             'treeview' => []
         ],
 
         [
-            'permiso' => validarPermisos('usuarios.index') || validarPermisos('root'),
+            'permiso' => validarPermisos('territorio.index') || validarPermisos('usuarios.index') || validarPermisos('root'),
             'url' => '#',
-            'active' => ($modulo == 'usuarios.index') || ($modulo == 'parametros.index'),
+            'active' => ($modulo == 'territorio.index') || ($modulo == 'usuarios.index') || ($modulo == 'parametros.index'),
             'icono' => '<i class="nav-icon fas fa-cogs"></i>',
             'titulo' => 'Configuración',
             'badge' => null,
             'treeview' => [
                 [
+                    'permiso' => validarPermisos('territorio.index'),
+                    'url' => public_url('admin/territorio'),
+                    'active' => $modulo == 'territorio.index',
+                    'icono' => '<i class="fas fa-globe-americas nav-icon"></i>',
+                    'titulo' => 'Territorio'
+                ],
+                [
                     'permiso' => validarPermisos('usuarios.index'),
                     'url' => public_url('admin/usuarios'),
                     'active' => $modulo == 'usuarios.index',
-                    'icono' => '<i class="fas fa-users-cog nav-icon"></i>',
+                    'icono' => '<i class="fas fa-users"></i> ',
                     'titulo' => 'Usuarios'
                 ],
                 [
                     'permiso' => validarPermisos('root'),
                     'url' => public_url('admin/parametros'),
                     'active' => $modulo == 'parametros.index',
-                    'icono' => '<i class="fas fa-cog nav-icon"></i>',
+                    'icono' => '<i class="fas fa-cog"></i> ',
                     'titulo' => 'Parametros'
                 ]
             ]
@@ -167,6 +174,14 @@ function verPermisos(): array
                 [
                     'permiso' => 'usuarios.edit',
                     'text' => 'Editar Usuarios'
+                ],
+                [
+                    'permiso' => 'usuarios.estatus',
+                    'text' => 'Cambiar Estatus'
+                ],
+                [
+                    'permiso' => 'usuarios.reset',
+                    'text' => 'Reset Password'
                 ],
                 [
                     'permiso' => 'usuarios.destroy',

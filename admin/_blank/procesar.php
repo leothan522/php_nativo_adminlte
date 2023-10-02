@@ -17,7 +17,7 @@ if ($_POST) {
             switch ($opcion) {
 
                 //definimos las opciones a procesar
-                
+
 
                 //Por defecto
                 default:

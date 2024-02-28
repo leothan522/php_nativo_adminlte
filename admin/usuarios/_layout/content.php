@@ -13,7 +13,7 @@
             <?php
             $listarUsuarios = $controller->listarUsuarios();
             $links = $controller->linksPaginate;
-            $user_role = $controller->USER_ROLE;
+			$user_role = $controller->USER_ROLE;
             $i = 0;
             require_once 'card_table.php';
             ?>

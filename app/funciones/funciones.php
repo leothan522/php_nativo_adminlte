@@ -1,14 +1,21 @@
 <?php
 
+use app\model\Parametros;
 use Dotenv\Dotenv;
 
 $dotenv = Dotenv::createImmutable(dirname(__FILE__, 3));
 $dotenv->load();
 define('ROOT_PATH', $_ENV['APP_URL']);
 
-function asset($url): void
+function asset($url, $noCache = false): void
 {
-    echo ROOT_PATH . $url;
+    $version = null;
+    if ($noCache){
+        if (isset($_ENV['APP_DEBUG']) && config('app_debug') == 'true'){
+            $version = "?v=".rand();
+        }
+    }
+    echo ROOT_PATH . $url . $version;
 }
 
 function public_url($url): string
@@ -202,8 +209,28 @@ function crearResponse($error = null, $result = false, $title = null, $message =
     return $response;
 }
 
+function verFecha($fecha): string
+{
+    $newDate = date("d-m-Y", strtotime($fecha));
+    return $newDate;
+}
 
-//**************************************************************** */
+function diaEspanol($fecha){
+    $diaSemana = date("w",strtotime($fecha));
+    $diasEspanol = array("Domingo","Lunes","Martes","Miercoles","Jueves","Viernes","Sabado");
+    $dia = $diasEspanol[$diaSemana];
+    return $dia;
+}
+
+function mesEspanol($numMes = null){
+    $meses = array("Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre");
+    if (!is_null($numMes)){
+        $mes = $meses[$numMes - 1];
+        return $mes;
+    }else{
+        return $meses;
+    }
+}
 
 function cerosIzquierda($numero, $cant_ceros): string
 {
@@ -217,10 +244,35 @@ function verHora($hora): string
     return $newHora;
 }
 
-function verFecha($fecha): string
-{
-    $newDate = date("d-m-Y", strtotime($fecha));
-    return $newDate;
+function verUtf8($string){
+    //$utf8_string = "Some UTF-8 encoded BATE QUEBRADO ÑñíÍÁÜ niño ó Ó string: é, ö, ü";
+    return mb_convert_encoding($string, 'UTF-8');
+}
+
+function numRowsPaginate(){
+    $default = 30;
+    $model = new Parametros();
+    $parametro = $model->first('nombre', '=', 'numRowsPaginate');
+    if ($parametro) {
+        if (is_numeric($parametro['valor'])) {
+            return $parametro['valor'];
+        }
+    }
+    return $default;
+}
+
+//**************************************************************** */
+
+function numSizeCodigo(){
+    $default = 6;
+    $model = new Parametros();
+    $parametro = $model->first('nombre', '=', 'size_codigo');
+    if ($parametro) {
+        if (is_numeric($parametro['tabla_id'])) {
+            return $parametro['tabla_id'];
+        }
+    }
+    return $default;
 }
 
 function verFechaLetras($fecha): string
@@ -273,6 +325,8 @@ function validateJSON(string $json): bool
         return false;
     }
 }
+
+
 
 
 /*

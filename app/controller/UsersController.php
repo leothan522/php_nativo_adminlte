@@ -3,11 +3,12 @@
 namespace app\controller;
 
 use app\middleware\Admin;
+use app\model\Municipio;
 use app\model\User;
 
 class UsersController extends Admin
 {
-    public string $TITTLE = 'AdminLTE | Usuarios';
+    public string $TITTLE = 'Usuarios';
     public string $MODULO = 'usuarios.index';
 
     public $linksPaginate;
@@ -24,11 +25,16 @@ class UsersController extends Admin
     public function listarUsuarios(): array
     {
         $model = new User();
-        $limit = 30;
-        $this->linksPaginate = paginate('procesar.php', 'tabla_usuarios', $limit, $model->count(1))->createLinks();
+        $limit = numRowsPaginate();
+        $this->linksPaginate = paginate('_request/UsuariosRequest.php', 'tabla_usuarios', $limit, $model->count(1))->createLinks();
         return $model->paginate($limit, null, 'role', 'DESC', 1);
     }
 
-
+    public function getMunicipio($id)
+    {
+        $model = new Municipio();
+        $municipio = $model->find($id);
+        return $municipio['mini'];
+    }
 
 }

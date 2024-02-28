@@ -36,6 +36,11 @@ class PaginationController
     var $showCount      = true;
     var $currentOffset	= 0;
     var $contentDiv     = '';
+    var $opcion         = '';
+    var $leyenda        = '';
+    var $campo          = '';
+    var $operador       = '';
+    var $valor          = '';
     var $additionalParam= '';
 
     function __construct($params = array()){
@@ -73,7 +78,7 @@ class PaginationController
         // Is there only one page? will not need to continue
         if ($numPages == 1){
             if ($this->showCount){
-                $info = 'Mostrando : <span id="paginate_leyenda">' . $this->totalRows . '</span>';
+                $info = 'Mostrando : <span id="paginate_leyenda'.$this->leyenda.'">' . $this->totalRows . '</span>';
                 return $info;
             }else{
                 return '';
@@ -99,7 +104,7 @@ class PaginationController
             else
                 $info .= $this->totalRows;
 
-            $info .= ' de <span id="paginate_leyenda">' . $this->totalRows . '</span>  registros.';
+            $info .= ' de <span id="paginate_leyenda'.$this->leyenda.'">' . $this->totalRows . '</span>  registros.';
             $info .= $this->textTagClose;
 
             $output .= $info;
@@ -183,7 +188,18 @@ class PaginationController
             return '<a href="'. $this->anchorClass . ' ' . $this->baseURL . $count . '">'. $text .'</a>';
 
         $pageCount = $count?$count:0;
-        $this->additionalParam = "{'page' : $pageCount, 'limit' : $this->perPage, 'baseURL' : '$this->baseURL', 'totalRows' : '$this->totalRows', 'tableID' : '$this->tableID', 'opcion': 'paginate' }";
+        $this->additionalParam = "{
+        'page' : $pageCount, 
+        'limit' : $this->perPage, 
+        'baseURL' : '$this->baseURL', 
+        'totalRows' : '$this->totalRows', 
+        'tableID' : '$this->tableID', 
+        'opcion': '$this->opcion', 
+        'contentDiv': '$this->contentDiv', 
+        'campo': '$this->campo', 
+        'operador': '$this->operador', 
+        'valor': '$this->valor', 
+        }";
 
         return "<a href=\"javascript:void(0);\" " . $this->anchorClass . "
 				onclick=\"$.post('". $this->baseURL."', ". $this->additionalParam .", function(data){

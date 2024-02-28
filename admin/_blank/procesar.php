@@ -2,6 +2,8 @@
 session_start();
 require_once "../../vendor/autoload.php";
 
+
+
 $response = array();
 $paginate = false;
 
@@ -12,7 +14,6 @@ if ($_POST) {
         $opcion = $_POST['opcion'];
 
         try {
-
 
             switch ($opcion) {
 
@@ -30,7 +31,6 @@ if ($_POST) {
         } catch (Exception $e) {
             $response = crearResponse('error_excepcion', false, null, "General Error: {$e->getMessage()}");
         }
-
     } else {
         $response = crearResponse('error_opcion');
     }

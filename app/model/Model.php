@@ -22,17 +22,34 @@ class Model
         return $rows;
     }
 
-    public function paginate($limit, $offset = null, $orderBy = 'id', $opt = 'ASC', $band = null): array
+    public function paginate($limit, $offset = null, $orderBy = 'id', $opt = 'ASC', $band = null, $campo = null, $operador = null, $valor = null): array
     {
         $extra = null;
+        $where = null;
+        $columna = null;
         if (!is_null($band)) {
-            $extra = "WHERE `band`= $band";
+            $where = true;
+            $extra = "`band`= $band";
         }
         if (!is_null($offset)){
             $offset = $offset.",";
         }
+
+        if (!is_null($campo) && !is_null($operador) && !is_null($valor)){
+            $where = true;
+            if (!is_null($extra)){
+                $columna = "`$campo` $operador '$valor' AND";
+            }else{
+                $columna = "`$campo` $operador '$valor'";
+            }
+        }
+
+        if (!is_null($where)){
+            $where = 'WHERE ';
+        }
+
         $query = new Query();
-        $sql = "SELECT * FROM `$this->TABLA` $extra ORDER BY `$orderBy` $opt LIMIT $offset $limit;";
+        $sql = "SELECT * FROM `$this->TABLA`  $where $columna $extra ORDER BY `$orderBy` $opt LIMIT $offset $limit;";
         $rows = $query->getAll($sql);
         return $rows;
     }
@@ -53,14 +70,24 @@ class Model
         return $rows;
     }
 
-    public function count($band = null): mixed
+    public function count($band = null, $campo = null, $operador = null, $valor = null): mixed
     {
         $extra = null;
         if (!is_null($band)) {
             $extra = "WHERE `band`= $band";
         }
+        $contar = null;
+        if (!is_null($campo) && !is_null($operador) && !is_null($campo)){
+            $contar ="WHERE `$campo` $operador '$valor'";
+        }
+
+        if (!is_null($extra) && !is_null($contar)){
+            $extra = "WHERE ";
+            $contar = "`$campo` $operador '$valor' AND `band`= $band";
+        }
+
         $query = new Query();
-        $sql = "SELECT COUNT(*) FROM `$this->TABLA` $extra ;";
+        $sql = "SELECT COUNT(*) FROM `$this->TABLA` $extra $contar ;";
         $rows = $query->count($sql);
         return $rows;
     }
@@ -141,6 +168,24 @@ class Model
         $query = new Query();
         $sql = "DELETE FROM `$this->TABLA` WHERE  `id` = $id;";
         $row = $query->save($sql);
+        return $row;
+    }
+
+    public function sqlPersonalizado($sql, $opcion = 'getFirst')
+    {
+        $query = new Query();
+
+        switch ($opcion){
+            case 'getAll':
+                $row = $query->getAll($sql);
+                break;
+            case 'save':
+                $row = $query->save($sql);
+                break;
+            default:
+                $row = $query->getFirst($sql);
+                break;
+        }
         return $row;
     }
 

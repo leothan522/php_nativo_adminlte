@@ -1,11 +1,14 @@
+function irDashboard() {
+    ajaxRequest({ url: '_request/WebRequest.php', data: {opcion: 'ir_dashboard'}}, function (data) {
+        if (data.result) {
+            window.location.href = "../admin/";
+        }
+    });
+}
+
 //Inicializamos el InputMak
 inputmask('#edit_name', 'alfa', 3, 100, ' ');
 inputmaskTelefono('#edit_telefono');
-
-//Inicializar el input de subir foto
-$(function () {
-    bsCustomFileInput.init();
-});
 
 //editar datos personales
 $('#form_perfil_datos').submit(function (e){
@@ -55,7 +58,7 @@ $('#form_perfil_datos').submit(function (e){
 
     if (procesar){
 
-        ajaxRequest({ url: '_request/PerfilRequest.php', data: $(this).serialize() }, function (data) {
+        ajaxRequest({ url: '_request/WebRequest.php', data: $(this).serialize() }, function (data) {
             if (data.result){
                 $('#profile_name').text(data.nombre);
                 $('#profile_email').text(data.email);
@@ -175,7 +178,7 @@ $('#form_perfil_seguridad').submit(function (e){
 
     if (procesar){
 
-        ajaxRequest({ url: '_request/PerfilRequest.php', data: $(this).serialize() }, function (data) {
+        ajaxRequest({ url: '_request/WebRequest.php', data: $(this).serialize() }, function (data) {
 
             if (data.result){
 
@@ -298,5 +301,3 @@ $('#check_datos').click(function (){
         passwor_actual_datos.attr('type', 'password');
     }
 });
-
-console.log('perfil.!')

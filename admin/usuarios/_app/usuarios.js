@@ -10,13 +10,13 @@ inputmaskTelefono('#edit_telefono');
 
 //Generar Clave Aleatoria
 function generarClave() {
-    
-    ajaxRequest({ data: { opcion: 'generar_clave' } }, function (data) {
-        if (data.result){
+
+    ajaxRequest({ url: '_request/UsuariosRequest.php', data: {opcion: 'generar_clave'}}, function (data) {
+        if (data.result) {
             $('#password').val(data.message);
         }
     });
-    
+
     /*verSpinner(true);
     $.ajax({
         type: 'POST',
@@ -57,9 +57,9 @@ $('#form_create_user').submit(function (e) {
     let email = $('#email');
     let password = $('#password');
     let telefono = $('#telefono');
-    let tipo =  $('#tipo');
+    let tipo = $('#tipo');
 
-    if (!name.inputmask('isComplete')){
+    if (!name.inputmask('isComplete')) {
         procesar = false;
         name.addClass('is-invalid');
         $('#error_name').text('El Nombre es obligatorio, debe tener al menos 4 caracteres.');
@@ -68,20 +68,20 @@ $('#form_create_user').submit(function (e) {
         name.addClass('is-valid');
     }
 
-    if (email.val().length <= 0 ){
+    if (email.val().length <= 0) {
         procesar = false;
         email.addClass('is-invalid');
         $('#error_email').text('El Email es obligatorio.');
-    }else {
+    } else {
         email.removeClass('is-invalid');
         email.addClass('is-valid');
     }
 
-    if (password.val().length <= 7){
+    if (password.val().length <= 7) {
         procesar = false;
         password.addClass('is-invalid');
         $('#error_password').text('El contraseña es obligatoria, debe tener al menos 8 caracteres');
-    }else {
+    } else {
         password.removeClass('is-invalid');
         password.addClass('is-valid');
     }
@@ -95,31 +95,47 @@ $('#form_create_user').submit(function (e) {
         telefono.addClass('is-valid');
     }
 
-    if (tipo.val().length <= 0){
+    if (tipo.val().length <= 0) {
         procesar = false;
         tipo.addClass('is-invalid');
         $('#error_tipo').text('El Tipo es obligatorio.');
-    }else {
+    } else {
         tipo.removeClass('is-invalid');
         tipo.addClass('is-valid');
     }
 
-    if (procesar){
-        
-        ajaxRequest({ data: $(this).serialize() }, function (data) {
-            
-            if (data.result){
+    if (procesar) {
+
+        ajaxRequest({ url: '_request/UsuariosRequest.php', data: $(this).serialize()}, function (data) {
+
+            if (data.result) {
 
                 let table = $('#tabla_usuarios').DataTable();
+                let btn_editar = '';
+                let btn_eliminar = '';
+                let btn_estatus = '';
+
+                if (!data.btn_editar) {
+                    btn_editar = 'disabled';
+                }
+
+                if (!data.btn_eliminar) {
+                    btn_eliminar = 'disabled';
+                }
+
+                if (!data.btn_permisos) {
+                    btn_estatus = 'disabled';
+                }
+
                 let buttons = '<div class="btn-group btn-group-sm">\n' +
-                    '                                <button type="button" class="btn btn-info" onclick="getUser('+ data.id +')"\n' +
-                    '                                        data-toggle="modal" data-target="#modal_edit_usuarios">\n' +
+                    '                                <button type="button" class="btn btn-info" onclick="getUser(' + data.id + ')"\n' +
+                    '                                        data-toggle="modal" data-target="#modal_edit_usuarios" ' + btn_editar + '>\n' +
                     '                                    <i class="fas fa-user-edit"></i>\n' +
                     '                                </button>\n' +
-                    '                                <button type="button" class="btn btn-info" data-toggle="modal" data-target="#modal_permisos" onclick="getPermisos('+ data.id +')" >\n' +
+                    '                                <button type="button" class="btn btn-info" data-toggle="modal" data-target="#modal_permisos" onclick="getPermisos(' + data.id + ')" ' + btn_estatus + ' >\n' +
                     '                                    <i class="fas fa-user-shield"></i>\n' +
                     '                                </button>\n' +
-                    '                                <button type="button" class="btn btn-info" onclick="destroyUser('+ data.id +')" id="btn_eliminar_'+ data.id +'"  >\n' +
+                    '                                <button type="button" class="btn btn-info" onclick="destroyUser(' + data.id + ')" id="btn_eliminar_' + data.id + '" ' + btn_eliminar + ' >\n' +
                     '                                    <i class="far fa-trash-alt"></i>\n' +
                     '                                </button>\n' +
                     '                            </div>';
@@ -145,83 +161,14 @@ $('#form_create_user').submit(function (e) {
                 $('#btn_reset_create_user').click();
                 $('#paginate_leyenda').text(data.total);
 
-            }else {
+            } else {
                 if (data.error === "email_duplicado") {
                     email.addClass('is-invalid');
                     $('#error_email').text("email ya registrado.");
                 }
             }
-            
+
         });
-        
-        /*verSpinner(true);
-        $.ajax({
-            type: 'POST',
-            url: 'procesar.php',
-            data: $(this).serialize(),
-            success: function (response) {
-
-                let data = JSON.parse(response);
-
-                if (data.result){
-
-                    let table = $('#tabla_usuarios').DataTable();
-                    let buttons = '<div class="btn-group btn-group-sm">\n' +
-                        '                                <button type="button" class="btn btn-info" onclick="getUser('+ data.id +')"\n' +
-                        '                                        data-toggle="modal" data-target="#modal_edit_usuarios">\n' +
-                        '                                    <i class="fas fa-user-edit"></i>\n' +
-                        '                                </button>\n' +
-                        '                                <button type="button" class="btn btn-info" data-toggle="modal" data-target="#modal_permisos" onclick="getPermisos('+ data.id +')" >\n' +
-                        '                                    <i class="fas fa-user-shield"></i>\n' +
-                        '                                </button>\n' +
-                        '                                <button type="button" class="btn btn-info" onclick="destroyUser('+ data.id +')" id="btn_eliminar_'+ data.id +'"  >\n' +
-                        '                                    <i class="far fa-trash-alt"></i>\n' +
-                        '                                </button>\n' +
-                        '                            </div>';
-
-                    table.row.add([
-                        data.item,
-                        data.name,
-                        data.email,
-                        data.telefono,
-                        data.role,
-                        data.estatus,
-                        buttons
-                    ]).draw();
-
-                    let nuevo = $('#tabla_usuarios tr:last');
-                    nuevo.attr('id', 'tr_item_' + data.id)
-                    nuevo.find("td:eq(1)").addClass('nombre');
-                    nuevo.find("td:eq(2)").addClass('email');
-                    nuevo.find("td:eq(3)").addClass('telefono');
-                    nuevo.find("td:eq(4)").addClass('role');
-                    nuevo.find("td:eq(5)").addClass('estatus');
-
-                    $('#btn_reset_create_user').click();
-                    $('#paginate_leyenda').text(data.total);
-
-                }else {
-                    if (data.error === "email_duplicado") {
-                        email.addClass('is-invalid');
-                        $('#error_email').text("email ya registrado.");
-                    }
-                }
-
-                if (data.alerta) {
-                    Alerta.fire({
-                        icon: data.icon,
-                        title: data.title,
-                        text: data.message
-                    });
-                } else {
-                    Toast.fire({
-                        icon: data.icon,
-                        text: data.title
-                    });
-                }
-                verSpinner(false);
-            }
-        });*/
     }
 
 
@@ -229,7 +176,7 @@ $('#form_create_user').submit(function (e) {
 
 //Limpiar o Restablecer Formulario
 function resetForm(edit = false) {
-    if (!edit){
+    if (!edit) {
         $('#name')
             .removeClass('is-valid')
             .removeClass('is-invalid');
@@ -245,7 +192,7 @@ function resetForm(edit = false) {
         $('#tipo')
             .removeClass('is-valid')
             .removeClass('is-invalid');
-    }else {
+    } else {
         $('#edit_name')
             .removeClass('is-valid')
             .removeClass('is-invalid');
@@ -287,11 +234,11 @@ function setUser(data) {
         .trigger('change');
 
     let button = $('#btn_profile_band_user');
-    if (data.band !== 1){
+    if (data.band !== 1) {
         button.removeClass('btn-danger');
         button.addClass('btn-success');
         button.text('Activar Usuario');
-    }else {
+    } else {
         button.addClass('btn-danger');
         button.removeClass('btn-success');
         button.text('Inactivar Usuario');
@@ -307,57 +254,28 @@ function getUser(id = null) {
 */
     let enviar_id;
 
-    if (id){
+    if (id) {
         enviar_id = id;
-    }else {
+    } else {
         enviar_id = $('#edit_id').val();
     }
-    
-    ajaxRequest({ data:{ opcion: 'get_user', id: enviar_id } }, function (data) {
-        if (data.result){
+
+    ajaxRequest({ url: '_request/UsuariosRequest.php',  data: {opcion: 'get_user', id: enviar_id}}, function (data) {
+        if (data.result) {
             setUser(data);
             $('#ver_new_password').addClass('d-none');
             $('#profile_new_password').val('');
             resetForm(true);
         }
     });
-
-    /*verSpinner(true);
-    $.ajax({
-        type: 'POST',
-        url: 'procesar.php',
-        data: {
-            opcion: 'get_user',
-            id: enviar_id
-        },
-        success: function (response) {
-            let data = JSON.parse(response);
-
-            if (data.result){
-                setUser(data);
-                $('#ver_new_password').addClass('d-none');
-                $('#profile_new_password').val('');
-                resetForm(true);
-            }
-
-            if (data.alerta) {
-                Alerta.fire({
-                    icon: data.icon,
-                    title: data.title,
-                    text: data.message
-                });
-            }
-            verSpinner(false);
-        }
-    });*/
 }
 
 //cambiar estatus del usuario
 function cambiarEstatus() {
     let id = $('#edit_id').val();
-    
-    ajaxRequest({ data: { opcion: 'cambiar_estatus', id: id } }, function (data) {
-        if (data.result){
+
+    ajaxRequest({ url: '_request/UsuariosRequest.php', data: {opcion: 'cambiar_estatus', id: id}}, function (data) {
+        if (data.result) {
             setUser(data);
             let table = $('#tabla_usuarios').DataTable();
             let tr = $('#tr_item_' + data.id);
@@ -366,37 +284,6 @@ function cambiarEstatus() {
                 .draw();
         }
     });
-    
-    /*verSpinner(true);
-    $.ajax({
-        type: 'POST',
-        url: 'procesar.php',
-        data: {
-            opcion: 'cambiar_estatus',
-            id: id
-        },
-        success: function (response) {
-            let data = JSON.parse(response);
-
-            if (data.result){
-                setUser(data);
-                let table = $('#tabla_usuarios').DataTable();
-                let tr = $('#tr_item_' + data.id);
-                table
-                    .cell(tr.find('.estatus')).data(data.table_estatus)
-                    .draw();
-            }
-
-            if (data.alerta) {
-                Alerta.fire({
-                    icon: data.icon,
-                    title: data.title,
-                    text: data.message
-                });
-            }
-            verSpinner(false);
-        }
-    });*/
 }
 
 //restablecer contraseña
@@ -404,48 +291,14 @@ function resetPassword() {
     let id = $('#edit_id').val();
     let ver = $('#ver_new_password');
     let input = $('#profile_new_password');
-    
-    ajaxRequest({ data: { opcion: 'reset_password', id: id, password: input.val() }}, function (data) {
-        if (data.result){
+
+    ajaxRequest({ url: '_request/UsuariosRequest.php', data: {opcion: 'reset_password', id: id, password: input.val()}}, function (data) {
+        if (data.result) {
             ver.removeClass('d-none');
             input.val(data.message);
             setUser(data);
         }
     });
-    
-    /*verSpinner(true);
-    $.ajax({
-        type: 'POST',
-        url: 'procesar.php',
-        data:{
-            opcion: 'reset_password',
-            id: id,
-            password: input.val()
-        },
-        success: function (response) {
-            let data = JSON.parse(response);
-
-            if (data.result){
-                ver.removeClass('d-none');
-                input.val(data.message);
-                setUser(data);
-            }
-
-            if (data.alerta) {
-                Alerta.fire({
-                    icon: data.icon,
-                    title: data.title,
-                    text: data.message
-                });
-            } else {
-                Toast.fire({
-                    icon: data.icon,
-                    text: data.title
-                });
-            }
-            verSpinner(false);
-        }
-    });*/
 }
 
 //Editar usuario
@@ -455,9 +308,9 @@ $('#form_editar_user').submit(function (e) {
     let name = $('#edit_name');
     let email = $('#edit_email');
     let telefono = $('#edit_telefono');
-    let tipo =  $('#edit_tipo');
+    let tipo = $('#edit_tipo');
 
-    if (!name.inputmask('isComplete')){
+    if (!name.inputmask('isComplete')) {
         procesar = false;
         name.addClass('is-invalid');
         $('#error_edit_name').text('El Nombre es obligatorio, debe tener al menos 4 caracteres.');
@@ -466,11 +319,11 @@ $('#form_editar_user').submit(function (e) {
         name.addClass('is-valid');
     }
 
-    if (email.val().length <= 0 ){
+    if (email.val().length <= 0) {
         procesar = false;
         email.addClass('is-invalid');
         $('#error_edit_email').text('El Email es obligatorio.');
-    }else {
+    } else {
         email.removeClass('is-invalid');
         email.addClass('is-valid');
     }
@@ -484,20 +337,20 @@ $('#form_editar_user').submit(function (e) {
         telefono.addClass('is-valid');
     }
 
-    if (tipo.val().length <= 0){
+    if (tipo.val().length <= 0) {
         procesar = false;
         tipo.addClass('is-invalid');
         $('#error_edit_tipo').text('El Tipo es obligatorio.');
-    }else {
+    } else {
         tipo.removeClass('is-invalid');
         tipo.addClass('is-valid');
     }
 
-    if (procesar){
-        
-        ajaxRequest({ data: $(this).serialize() }, function (data) {
-            
-            if (data.result){
+    if (procesar) {
+
+        ajaxRequest({ url: '_request/UsuariosRequest.php', data: $(this).serialize()}, function (data) {
+
+            if (data.result) {
 
                 setUser(data);
 
@@ -511,60 +364,14 @@ $('#form_editar_user').submit(function (e) {
                     .draw();
                 resetForm(true);
 
-            }else {
+            } else {
                 if (data.error === "email_duplicado") {
                     email.addClass('is-invalid');
                     $('#error_edit_email').text("Email ya registrado.");
                 }
             }
-            
+
         });
-        
-        /*verSpinner(true);
-        $.ajax({
-            type: 'POST',
-            url: 'procesar.php',
-            data: $(this).serialize(),
-            success: function (response) {
-
-                let data = JSON.parse(response);
-
-                if (data.result){
-
-                    setUser(data);
-
-                    let table = $('#tabla_usuarios').DataTable();
-                    let tr = $('#tr_item_' + data.id);
-                    table
-                        .cell(tr.find('.nombre')).data(data.name)
-                        .cell(tr.find('.email')).data(data.email)
-                        .cell(tr.find('.telefono')).data(data.table_telefono)
-                        .cell(tr.find('.role')).data(data.table_role)
-                        .draw();
-                    resetForm(true);
-
-                }else {
-                    if (data.error === "email_duplicado") {
-                        email.addClass('is-invalid');
-                        $('#error_edit_email').text("email ya registrado.");
-                    }
-                }
-
-                if (data.alerta) {
-                    Alerta.fire({
-                        icon: data.icon,
-                        title: data.title,
-                        text: data.message
-                    });
-                } else {
-                    Toast.fire({
-                        icon: data.icon,
-                        text: data.title
-                    });
-                }
-                verSpinner(false);
-            }
-        });*/
     }
 
 
@@ -574,10 +381,10 @@ $('#form_editar_user').submit(function (e) {
 function destroyUser(id) {
     MessageDelete.fire().then((result) => {
         if (result.isConfirmed) {
-            
-            ajaxRequest({ data: { opcion: 'eliminar', id: id } }, function (data) {
 
-                if (data.result){
+            ajaxRequest({ url: '_request/UsuariosRequest.php', data: {opcion: 'eliminar', id: id}}, function (data) {
+
+                if (data.result) {
 
                     let table = $('#tabla_usuarios').DataTable();
                     let item = $('#btn_eliminar_' + id).closest('tr');
@@ -639,23 +446,23 @@ function destroyUser(id) {
 //Actualizar datos del usuario en Modal Permisos
 function getPermisos(id) {
 
-    ajaxRequest({ data: { opcion: 'get_permisos', id: id } }, function (data) {
+    ajaxRequest({ url: '_request/UsuariosRequest.php', data: {opcion: 'get_permisos', id: id}}, function (data) {
 
-        if (data.result){
+        if (data.result) {
 
             $('#li_permisos_nombre').text(data.name);
             $('#li_permisos_email').text(data.email);
             $('#li_permisos_role').text(data.tipo);
             $('#input_permisos_id').val(data.id);
 
-            if (data.permisos != null){
+            if (data.permisos != null) {
                 data.permisos.forEach((key, value) => {
                     key = key.replace('.', '_');
                     $('#' + key).removeAttr('checked');
                 });
             }
 
-            if (data.user_permisos != null){
+            if (data.user_permisos != null) {
                 Object.entries(data.user_permisos).forEach(([key, value]) => {
                     key = key.replace('.', '_');
                     $('#' + key).attr('checked', 'checked');
@@ -665,64 +472,13 @@ function getPermisos(id) {
         }
 
     });
-
-    /*verSpinner(true);
-    $.ajax({
-        type: 'POST',
-        url: 'procesar.php',
-        data: {
-            opcion: 'get_permisos',
-            id: id
-        },
-        success: function (response) {
-            let data = JSON.parse(response);
-
-            if (data.result){
-
-                $('#li_permisos_nombre').text(data.name);
-                $('#li_permisos_email').text(data.email);
-                $('#li_permisos_role').text(data.tipo);
-                $('#input_permisos_id').val(data.id);
-
-                if (data.permisos != null){
-                    data.permisos.forEach((key, value) => {
-                        key = key.replace('.', '_');
-                        $('#' + key).removeAttr('checked');
-                    });
-                }
-
-                if (data.user_permisos != null){
-                    Object.entries(data.user_permisos).forEach(([key, value]) => {
-                        key = key.replace('.', '_');
-                        $('#' + key).attr('checked', 'checked');
-                    });
-                }
-
-            }
-
-
-            if (data.alerta) {
-                Alerta.fire({
-                    icon: data.icon,
-                    title: data.title,
-                    text: data.message
-                });
-            } else {
-                Toast.fire({
-                    icon: data.icon,
-                    text: data.title
-                });
-            }
-            verSpinner(false);
-        }
-    });*/
 }
 
 //Guardar los Permisos del usuario
 $('#form_permisos_usuario').submit(function (e) {
     e.preventDefault();
 
-    ajaxRequest({ data: $(this).serialize() }, function (data) {
+    ajaxRequest({ url: '_request/UsuariosRequest.php', data: $(this).serialize() }, function (data) {
         //muestro toast
     });
 
@@ -751,4 +507,142 @@ $('#form_permisos_usuario').submit(function (e) {
     });*/
 });
 
-console.log('hi!');
+function getUsuariosMunicipios() {
+    ajaxRequest({ url: '_request/UsuariosRequest.php', data: {opcion: 'get_usuarios_municipios'}}, function (data) {
+
+        if (data.result) {
+            let selectUsuarios = $('#usuarios_select_usuarios');
+            let selectMunicipios = $('#usuarios_select_municipios');
+            let municipios = data.municipios.length;
+            selectMunicipios.empty();
+            selectMunicipios.append('<option value="">Seleccione</option>');
+            for (let i = 0; i < municipios; i++) {
+                let id = data.municipios[i]['id'];
+                let nombre = data.municipios[i]['nombre'];
+                selectMunicipios.append('<option value="' + id + '">' + nombre + '</option>');
+            }
+            let usuarios = data.usuarios.length;
+            selectUsuarios.empty();
+            selectUsuarios.append('<option value="">Seleccione</option>');
+            for (let i = 0; i < usuarios; i++) {
+                let id = data.usuarios[i]['id'];
+                let nombre = data.usuarios[i]['email'];
+                selectUsuarios.append('<option value="' + id + '">' + nombre + '</option>');
+            }
+        }
+
+    });
+}
+
+function getAccesosMunicipio() {
+    ajaxRequest({ url: '_request/UsuariosRequest.php', data: {opcion: 'get_acceso_municipios'}, html: 'si'}, function (data) {
+        $('#usuario_card_table').html(data);
+        datatable('usuario_table_acceso');
+        $('#btn_reset_acceso_municipio').click();
+    });
+}
+
+$('#modal_acceso_form').submit(function (e) {
+    e.preventDefault()
+    let procesar = true;
+    let usuario = $('#usuarios_select_usuarios');
+    let municipios = $('#usuarios_select_municipios');
+
+    if (usuario.val().length <= 0) {
+        procesar = false;
+        usuario.addClass('is-invalid');
+        $('#error_usuarios_select_usuarios').text('El Usuario es obligatorio.');
+    } else {
+        usuario.removeClass('is-invalid');
+        usuario.addClass('is-valid');
+    }
+
+    if (municipios.val().length <= 0) {
+        procesar = false;
+        municipios.addClass('is-invalid');
+        $('#error_usuarios_select_municipios').text('Municipios es obligatorio.');
+    } else {
+        municipios.removeClass('is-invalid');
+        municipios.addClass('is-valid');
+    }
+
+    if (procesar) {
+
+        ajaxRequest({ url: '_request/UsuariosRequest.php', data: $(this).serialize()}, function (data) {
+
+            if (data.result){
+
+                let table = $('#usuario_table_acceso').DataTable();
+
+                if (data.remove){
+                    let item = $('#btn_eliminar_acceso_' + data.id).closest('tr');
+                    table
+                        .row(item)
+                        .remove()
+                        .draw();
+                }
+
+                let buttons = '<div class="btn-group btn-group-sm">\n' +
+                    '                                <button type="button" class="btn btn-info" onclick="destroyAcceso(' + data.id + ')" id="btn_eliminar_acceso_' + data.id + '" >\n' +
+                    '                                    <i class="far fa-trash-alt"></i>\n' +
+                    '                                </button>\n' +
+                    '                            </div>';
+
+                table.row.add([
+                    data.item,
+                    data.email,
+                    data.municipios,
+                    buttons
+                ]).draw();
+
+                let nuevo = $('#usuario_table_acceso tr:last');
+                nuevo.attr('id', 'tr_item_' + data.id)
+                $('#btn_reset_acceso_municipio').click();
+                $('#paginate_leyenda_acceso').text(data.total);
+            }
+
+        });
+
+    }
+});
+
+function destroyAcceso(id) {
+    MessageDelete.fire().then((result) => {
+        if (result.isConfirmed) {
+
+            ajaxRequest({ url: '_request/UsuariosRequest.php', data: {opcion: 'eliminar_acceso', id: id}}, function (data) {
+
+                if (data.result) {
+
+                    let table = $('#usuario_table_acceso').DataTable();
+                    let item = $('#btn_eliminar_acceso_' + id).closest('tr');
+                    table
+                        .row(item)
+                        .remove()
+                        .draw();
+
+                    $('#paginate_leyenda_acceso').text(data.total);
+                }
+
+            });
+
+        }
+    });
+}
+
+function resetFormAcceso() {
+    let usuario = $('#usuarios_select_usuarios');
+    let municipios = $('#usuarios_select_municipios');
+    usuario
+        .removeClass('is-valid')
+        .removeClass('is-invalid')
+        .val("")
+        .trigger('change');
+    municipios
+        .removeClass('is-valid')
+        .removeClass('is-invalid')
+        .val("")
+        .trigger('change');
+}
+
+console.log('Usuarios.!');

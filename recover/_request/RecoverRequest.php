@@ -1,6 +1,6 @@
 <?php
 session_start();
-require_once "../vendor/autoload.php";
+require_once "../../vendor/autoload.php";
 use app\model\User;
 
 $response = array();
@@ -21,47 +21,41 @@ if ($_POST) {
                 case "guardar":
 
                     if (
-                        !empty($_POST['name']) &&
-                        !empty($_POST['email']) &&
                         !empty($_POST['password']) &&
-                        !empty($_POST['telefono'])
+                        !empty($_POST['token'])
                     ){
 
-                        $name = ucwords($_POST['name']);
-                        $email = strtolower($_POST['email']);
                         $password = password_hash($_POST['password'],PASSWORD_DEFAULT);
-                        $telefono = $_POST['telefono'];
+                        $token = $_POST['token'];
                         $created_at = date('Y-m-d');
 
-                        $existeEmail = $model->existe('email', '=', $email,null, 1);
-                        if (!$existeEmail){
+                        $existeEmail = $model->existe('token', '=', $token,null, 1);
+                        if ($existeEmail){
 
-                            $data = [
-                                $name,
-                                $email,
-                                $password,
-                                $telefono,
-                                0,
-                                $created_at
-                            ];
+                            $id = $existeEmail['id'];
+                            $model->update($id, 'password', $password);
+                            $model->update($id, 'token', null);
+                            $model->update($id, 'date_token', null);
+                            $model->update($id, 'updated_at', $created_at);
 
-                            $model->save($data);
-
-                            $user = $model->first('email', '=', $email);
-                            $_SESSION['id'] = $user['id'];
                             $response = crearResponse(
                                 null,
                                 true,
-                                "Bienvenido ". $name,
-                                "Bienvenido ". $name
+                                'Contraseña Actualizada.',
+                                'Su contraseña se ha restablecido correctamente. Inicie sesión con su nueva clave.',
+                                'success',
+                                true
                             );
+
+
                         }else{
                             $response = crearResponse(
                                 'email_duplicado',
                                 false,
-                                'Email Duplicado.',
-                                'El email ya esta registrado.',
-                                'warning'
+                                'Token no encontrado.',
+                                'El token se encuentra vencido.',
+                                'warning',
+                                true
                             );
                         }
 

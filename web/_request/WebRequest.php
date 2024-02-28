@@ -2,24 +2,44 @@
 session_start();
 require_once "../../vendor/autoload.php";
 
-use app\database\Query;
+use app\controller\WebController;
 use app\model\User;
-use app\controller\UsersController;
-
-$controller = new UsersController();
 $response = array();
+$paginate = false;
+$controller = new WebController();
+$model = new User();
 
 if ($_POST) {
 
     if (!empty($_POST['opcion'])) {
-
         $opcion = $_POST['opcion'];
 
         try {
 
-            $model = new User();
-
             switch ($opcion) {
+                //definimos las opciones a procesar
+                case 'ir_dashboard':
+
+                    if ($controller->USER_ROLE){
+                        $response = crearResponse(
+                            null,
+                            true,
+                            '',
+                            '',
+                            'success',
+                            false,
+                        true
+                        );
+                    }else{
+                        $response = crearResponse(
+                            'no_admin',
+                            false,
+                            'No tienes permisos suficientes.',
+                            '',
+                            'error'
+                        );
+                    }
+                    break;
 
                 //definimos las opciones a procesar
                 case 'editar_datos':
@@ -65,12 +85,16 @@ if ($_POST) {
                             if ($cambios) {
                                 //sucess
                                 $model->update($id, 'updated_at', $updated_at);
+                                $user = $model->find($id);
                                 $response = crearResponse(
                                     null,
                                     true,
                                     'Cambios guardados.',
                                     'Cambios guardados exitosamente.'
                                 );
+                                $response['nombre'] = $user['name'];
+                                $response['email'] = $user['email'];
+                                $response['telefono'] = $user['telefono'];
                             } else {
                                 //manejo el error
                                 $response = crearResponse('no_cambios');
@@ -158,6 +182,7 @@ if ($_POST) {
 
                     break;
 
+
                 //Por defecto
                 default:
                     $response = crearResponse('no_opcion', false, null, $opcion);
@@ -169,7 +194,6 @@ if ($_POST) {
         } catch (Exception $e) {
             $response = crearResponse('error_excepcion', false, null, "General Error: {$e->getMessage()}");
         }
-
     } else {
         $response = crearResponse('error_opcion');
     }
@@ -177,5 +201,7 @@ if ($_POST) {
     $response = crearResponse('error_method');
 }
 
-echo json_encode($response, JSON_UNESCAPED_UNICODE);
+if (!$paginate) {
+    echo json_encode($response, JSON_UNESCAPED_UNICODE);
+}
 

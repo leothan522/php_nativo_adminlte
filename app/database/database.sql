@@ -15,11 +15,11 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 
--- Volcando estructura de base de datos para adminlte
-CREATE DATABASE IF NOT EXISTS `adminlte` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_spanish_ci */ /*!80016 DEFAULT ENCRYPTION='N' */;
-USE `adminlte`;
+-- Volcando estructura de base de datos para dashboard_adminlte
+CREATE DATABASE IF NOT EXISTS `dashboard_adminlte` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci */ /*!80016 DEFAULT ENCRYPTION='N' */;
+USE `dashboard_adminlte`;
 
--- Volcando estructura para tabla adminlte.parametros
+-- Volcando estructura para tabla dashboard_adminlte.parametros
 CREATE TABLE IF NOT EXISTS `parametros` (
   `id` int unsigned NOT NULL AUTO_INCREMENT,
   `nombre` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_spanish_ci NOT NULL,
@@ -28,9 +28,9 @@ CREATE TABLE IF NOT EXISTS `parametros` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish_ci;
 
--- Volcando datos para la tabla adminlte.parametros: ~0 rows (aproximadamente)
+-- Volcando datos para la tabla dashboard_adminlte.parametros: ~0 rows (aproximadamente)
 
--- Volcando estructura para tabla adminlte.users
+-- Volcando estructura para tabla dashboard_adminlte.users
 CREATE TABLE IF NOT EXISTS `users` (
   `id` int unsigned NOT NULL AUTO_INCREMENT,
   `name` varchar(150) CHARACTER SET utf8mb4 COLLATE utf8mb4_spanish_ci NOT NULL,
@@ -52,11 +52,11 @@ CREATE TABLE IF NOT EXISTS `users` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish_ci;
 
--- Volcando datos para la tabla adminlte.users: ~3 rows (aproximadamente)
+-- Volcando datos para la tabla dashboard_adminlte.users: ~3 rows (aproximadamente)
 INSERT INTO `users` (`id`, `name`, `email`, `password`, `telefono`, `token`, `date_token`, `path`, `role`, `role_id`, `permisos`, `estatus`, `band`, `created_at`, `updated_at`, `deleted_at`, `dispositivo`) VALUES
-	(1, 'Yonathan Castillo r', 'leothan522@gmail.com', '$2y$10$D2ohRbgCgGaECIjGLM0GHunPKCf9xsJIl1T0a4KOQIW0iIFRTInJm', '(0424) 338-66.00', 'SjOXRpWzXXQuThxQV45gr91oNXfHL3ljOoGYGDnbZixdpC7q1F', NULL, NULL, 100, 0, NULL, 1, 1, '2023-08-12', '2023-09-30', NULL, 0),
+	(1, 'Yonathan Castillo r', 'leothan522@gmail.com', '$2y$10$Hx0iUXf01RZUqq0xBHyVueBg3FoiGpCEtSTZ8tU0rAK30RffBMiAC', '(0424) 338-66.00', NULL, NULL, NULL, 100, 0, NULL, 1, 1, '2023-08-12', NULL, NULL, 0),
 	(2, 'Antonny Maluenga', 'gabrielmalu15@gmail.com', '$2y$10$XibWahOwcjxTdM.YWlhrTuA8gJZeyK7fLe9Ge5yrI5loizvfE2sea', '(0412) 199-56.47', NULL, NULL, NULL, 100, 0, NULL, 1, 1, '2023-08-28', NULL, NULL, 0),
-	(3, 'Administrador', 'admin@adminlte.com', '$2y$10$5Fl3weju4a/JQi/x92lIMuXgXUr0dsxp6CIIikPNtNRyjDUlxj4ge', '(0424) 338-66.00', NULL, NULL, NULL, 99, 0, '{"usuarios.index":true}', 0, 0, '2023-09-28', NULL, '2023-09-29', 0);
+	(3, 'Administrador', 'admin@adminlte.com', '$2y$10$5Fl3weju4a/JQi/x92lIMuXgXUr0dsxp6CIIikPNtNRyjDUlxj4ge', '(0424) 338-66.00', NULL, NULL, NULL, 99, 0, NULL, 0, 0, '2023-09-28', NULL, NULL, 0);
 
 /*!40103 SET TIME_ZONE=IFNULL(@OLD_TIME_ZONE, 'system') */;
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;

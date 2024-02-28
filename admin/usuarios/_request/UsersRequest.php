@@ -1,14 +1,13 @@
 <?php
 session_start();
 require_once "../../../vendor/autoload.php";
-
-use app\model\User;
 use app\controller\UsersController;
-use app\model\Municipio;
+$controller = new UsersController();
+use app\model\User;
+
 
 $response = array();
 $paginate = false;
-$controller = new UsersController();
 
 if ($_POST) {
 
@@ -25,41 +24,16 @@ if ($_POST) {
                 //definimos las opciones a procesar
 
                 case 'paginate':
-                    //$controller = new UsersController();
+                    $paginate = true;
+
                     $offset = !empty($_POST['page']) ? $_POST['page'] : 0;
                     $limit = !empty($_POST['limit']) ? $_POST['limit'] : 10;
                     $baseURL = !empty($_POST['baseURL']) ? $_POST['baseURL'] : 'getData.php';
                     $totalRows = !empty($_POST['totalRows']) ? $_POST['totalRows'] : 0;
                     $tableID = !empty($_POST['tableID']) ? $_POST['tableID'] : 'table_database';
 
-                    $listarUsuarios = $model->paginate($limit, $offset, 'role', 'DESC', 1);
-                    $links = paginate($baseURL, $tableID, $limit, $model->count(1), $offset)->createLinks();
-                    $i = $offset;
-                    $user = $model->find($_SESSION['id']);
-                    $user_role = $user['role'];
-
+                    $controller->index($baseURL, $tableID, $limit, $totalRows, $offset);
                     require_once "../_layout/card_table.php";
-
-
-                    $paginate = true;
-
-                    break;
-
-                case 'paginate_acceso':
-                    //$controller = new UsersController();.
-                    $offset = !empty($_POST['page']) ? $_POST['page'] : 0;
-                    $limit = !empty($_POST['limit']) ? $_POST['limit'] : 10;
-                    $baseURL = !empty($_POST['baseURL']) ? $_POST['baseURL'] : 'getData.php';
-                    $totalRows = !empty($_POST['totalRows']) ? $_POST['totalRows'] : 0;
-                    $tableID = !empty($_POST['tableID']) ? $_POST['tableID'] : 'table_database';
-
-                    $listarUsuarios = $model->paginate($limit, $offset, 'id', 'DESC', 1, 'acceso_municipio', '!=', 'null');
-                    $links = paginate('procesar.php', 'usuario_table_acceso', $limit, $model->count(1, 'acceso_municipio', '!=', 'null'), $offset, 'paginate_acceso', 'usuario_card_table_acceso')->createLinks();
-                    $i = $offset;
-                    echo '<div id="usuario_card_table_acceso">';
-                    require_once "../_layout/card_table_acceso.php";
-                    echo '</div>';
-                    $paginate = true;
 
                     break;
 
@@ -78,7 +52,8 @@ if ($_POST) {
 
                     break;
 
-                case 'guardar':
+                case 'store':
+                    $paginate = true;
 
                     if (validarPermisos('usuarios.create')) {
                         if (
@@ -88,59 +63,14 @@ if ($_POST) {
                             !empty($_POST['telefono']) &&
                             isset($_POST['tipo'])
                         ) {
-
                             $name = ucwords($_POST['name']);
                             $email = strtolower($_POST['email']);
                             $password = password_hash($_POST['password'], PASSWORD_DEFAULT);
                             $telefono = $_POST['telefono'];
                             $tipo = $_POST['tipo'];
-                            $created_at = date('Y-m-d');
-
-                            $existeEmail = $model->existe('email', '=', $email, null, 1);
-
-                            if (!$existeEmail) {
-
-                                $data = [
-                                    $name,
-                                    $email,
-                                    $password,
-                                    $telefono,
-                                    $tipo,
-                                    $created_at
-                                ];
-
-                                $model->save($data);
-
-                                $user = $model->first('email', '=', $email);
-                                $response = crearResponse(
-                                    null,
-                                    true,
-                                    'Usuario Creado Exitosamente.',
-                                    "Usuario Creado " . $name
-                                );
-                                //datos extras para el $response
-                                $response['id'] = $user['id'];
-                                $response['name'] = $user['name'];
-                                $response['email'] = $user['email'];
-                                $response['telefono'] = '<p class="text-center">' . $user['telefono'] . '</p>';
-                                $response['role'] = '<p class="text-center">' . verRoleUsuario($user['role']) . '</p>';
-                                $response['item'] = '<p class="text-center">' . $model->count(1) . '</p>';
-                                $response['estatus'] = '<p class="text-center">' . verEstatusUsuario($user['estatus']) . '</p>';
-                                $response['total'] = $model->count(1);
-                                $response['btn_editar'] = validarPermisos('usuarios.edit');
-                                $response['btn_eliminar'] = validarPermisos('usuarios.destroy');
-                                $response['btn_permisos'] = validarPermisos();
-
-                            } else {
-                                $response = crearResponse(
-                                    'email_duplicado',
-                                    false,
-                                    'Email Duplicado.',
-                                    'El email ya esta registrado.',
-                                    'warning'
-                                );
-                            }
-
+                            $controller->store($name, $email, $password, $telefono, $tipo);
+                            $controller->index();
+                            require_once "../_layout/card_table.php";
                         } else {
                             $response = crearResponse('faltan_datos');
                         }

@@ -1,3 +1,9 @@
+<?php
+$listarUsuarios = $controller->rows;
+$links = $controller->links;
+$userRole = $controller->USER_ROLE;
+$i = $controller->offset;
+?>
 <div class="card card-outline card-primary">
     <div class="card-header">
         <h3 class="card-title">Usuarios Registrados</h3>
@@ -49,7 +55,7 @@
                             <div class="btn-group btn-group-sm">
                                 <button type="button" class="btn btn-info" onclick="getUser(<?php echo $user['id'] ?>)"
                                         data-toggle="modal" data-target="#modal_edit_usuarios"
-                                    <?php if (($_SESSION['id'] == $user['id']) || ($user['role'] == 100) || (!validarPermisos('usuarios.edit')) || ($user['role'] > $user_role && $user_role != 100)) { echo 'disabled'; } ?> >
+                                    <?php if (($_SESSION['id'] == $user['id']) || ($user['role'] == 100) || (!validarPermisos('usuarios.edit')) || ($user['role'] > $userRole && $userRole != 100)) { echo 'disabled'; } ?> >
                                     <i class="fas fa-user-edit"></i>
                                 </button>
                                 <button type="button" class="btn btn-info" data-toggle="modal"
@@ -62,7 +68,7 @@
                                 <button type="button" class="btn btn-info"
                                         onclick="destroyUser(<?php echo $user['id']; ?>)"
                                         id="btn_eliminar_<?php echo $user['id'] ?>"
-                                    <?php if (($_SESSION['id'] == $user['id']) || ($user['role'] == 100) || (!validarPermisos('usuarios.destroy')) || ($user['role'] > $user_role && $user_role != 100)) { echo 'disabled'; } ?> >
+                                    <?php if (($_SESSION['id'] == $user['id']) || ($user['role'] == 100) || (!validarPermisos('usuarios.destroy')) || ($user['role'] > $userRole && $userRole != 100)) { echo 'disabled'; } ?> >
                                     <i class="far fa-trash-alt"></i>
                                 </button>
                             </div>

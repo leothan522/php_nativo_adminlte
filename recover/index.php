@@ -1,10 +1,10 @@
 <?php
 session_start();
 require_once "../vendor/autoload.php";
-use app\controller\RecoverController;
-$controller = new RecoverController();
+use app\controller\GuestController;
+$controller = new GuestController();
+$controller->recover();
 ?>
-
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -70,7 +70,7 @@ $controller = new RecoverController();
                 </div>
                 <div class="row">
                     <div class="col-12">
-                        <input type="hidden" name="opcion" value="guardar">
+                        <input type="hidden" name="opcion" value="set_password">
                         <input type="hidden" name="token" value="<?php echo $controller->token; ?>">
                         <button type="submit" class="btn btn-primary btn-block">Cambiar la contraseña</button>
                     </div>

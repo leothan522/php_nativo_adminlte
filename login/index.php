@@ -1,10 +1,9 @@
 <?php
 session_start();
-require_once "../vendor/autoload.php";
-
+require "../vendor/autoload.php";
 use app\controller\GuestController;
-
 $controller = new GuestController();
+$controller->index();
 ?>
 <!DOCTYPE html>
 <html lang="es">

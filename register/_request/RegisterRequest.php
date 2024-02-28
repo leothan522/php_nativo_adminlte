@@ -1,7 +1,8 @@
 <?php
 session_start();
 require_once "../../vendor/autoload.php";
-use app\model\User;
+use app\controller\GuestController;
+$controller = new GuestController();
 
 $response = array();
 
@@ -12,8 +13,6 @@ if ($_POST) {
         $opcion = $_POST['opcion'];
 
         try {
-
-            $model = new User();
 
             switch ($opcion) {
 
@@ -32,46 +31,12 @@ if ($_POST) {
                         $password = password_hash($_POST['password'],PASSWORD_DEFAULT);
                         $telefono = $_POST['telefono'];
                         $created_at = date('Y-m-d');
-
-                        $existeEmail = $model->existe('email', '=', $email,null, 1);
-                        if (!$existeEmail){
-
-                            $data = [
-                                $name,
-                                $email,
-                                $password,
-                                $telefono,
-                                0,
-                                $created_at
-                            ];
-
-                            $model->save($data);
-
-                            $user = $model->first('email', '=', $email);
-                            $_SESSION['id'] = $user['id'];
-                            $response = crearResponse(
-                                null,
-                                true,
-                                "Bienvenido ". $name,
-                                "Bienvenido ". $name
-                            );
-                        }else{
-                            $response = crearResponse(
-                                'email_duplicado',
-                                false,
-                                'Email Duplicado.',
-                                'El email ya esta registrado.',
-                                'warning'
-                            );
-                        }
-
+                        $response = $controller->register($name, $email, $password, $telefono, $created_at);
                     }else{
                         $response = crearResponse('faltan_datos');
                     }
 
                     break;
-
-
 
                 //Por defecto
                 default:

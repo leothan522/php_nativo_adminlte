@@ -3,6 +3,7 @@ session_start();
 require_once "../vendor/autoload.php";
 use app\controller\GuestController;
 $controller = new GuestController();
+$controller->index();
 ?>
 <!DOCTYPE html>
 <html lang="es">

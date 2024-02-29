@@ -87,6 +87,7 @@ $('#form_create_user').submit(function (e) {
             }else {
                 $('#dataContainer').html(data.html);
                 datatable('tabla_usuarios');
+                $('#btn_reset_create_user').click();
             }
 
         });
@@ -167,7 +168,7 @@ function setUser(data) {
 }
 
 //Solicitando los datos del usuario para el modal
-function getUser(id = null) {
+function edit(id = null) {
 
     //Inicializamos el InputMak
     /*$('#edit_name').inputmask("*{4,20}[ ]*{0,20}[ ]*{0,20}[ ]*{0,20}");
@@ -181,7 +182,7 @@ function getUser(id = null) {
         enviar_id = $('#edit_id').val();
     }
 
-    ajaxRequest({ url: '_request/UsersRequest.php',  data: {opcion: 'get_user', id: enviar_id}}, function (data) {
+    ajaxRequest({ url: '_request/UsersRequest.php',  data: {opcion: 'edit', id: enviar_id}}, function (data) {
         if (data.result) {
             setUser(data);
             $('#ver_new_password').addClass('d-none');
@@ -195,7 +196,7 @@ function getUser(id = null) {
 function cambiarEstatus() {
     let id = $('#edit_id').val();
 
-    ajaxRequest({ url: '_request/UsersRequest.php', data: {opcion: 'cambiar_estatus', id: id}}, function (data) {
+    ajaxRequest({ url: '_request/UsersRequest.php', data: {opcion: 'set_estatus', id: id}}, function (data) {
         if (data.result) {
             setUser(data);
             let table = $('#tabla_usuarios').DataTable();
@@ -213,7 +214,7 @@ function resetPassword() {
     let ver = $('#ver_new_password');
     let input = $('#profile_new_password');
 
-    ajaxRequest({ url: '_request/UsersRequest.php', data: {opcion: 'reset_password', id: id, password: input.val()}}, function (data) {
+    ajaxRequest({ url: '_request/UsersRequest.php', data: {opcion: 'set_password', id: id, password: input.val()}}, function (data) {
         if (data.result) {
             ver.removeClass('d-none');
             input.val(data.message);
@@ -299,11 +300,11 @@ $('#form_editar_user').submit(function (e) {
 });
 
 //Eliminar Usuario
-function destroyUser(id) {
+function destroy(id) {
     MessageDelete.fire().then((result) => {
         if (result.isConfirmed) {
 
-            ajaxRequest({ url: '_request/UsersRequest.php', data: {opcion: 'eliminar', id: id}}, function (data) {
+            ajaxRequest({ url: '_request/UsersRequest.php', data: {opcion: 'delete', id: id}}, function (data) {
 
                 if (data.result) {
 
@@ -318,48 +319,6 @@ function destroyUser(id) {
                 }
 
             });
-
-            /*verSpinner(true);
-            $.ajax({
-                type: 'POST',
-                url: 'procesar.php',
-                data: {
-                    opcion: 'eliminar',
-                    id: id
-                },
-                success: function (response) {
-
-                    let data = JSON.parse(response);
-
-                    if (data.result){
-
-                        let table = $('#tabla_usuarios').DataTable();
-                        let item = $('#btn_eliminar_' + id).closest('tr');
-                        table
-                            .row(item)
-                            .remove()
-                            .draw();
-
-                        $('#paginate_leyenda').text(data.total);
-                    }
-
-                    if (data.alerta) {
-                        Alerta.fire({
-                            icon: data.icon,
-                            title: data.title,
-                            text: data.message
-                        });
-                    } else {
-                        Toast.fire({
-                            icon: data.icon,
-                            text: data.title
-                        });
-                    }
-                    verSpinner(false);
-
-                }
-            });*/
-
         }
     });
 }
@@ -402,168 +361,7 @@ $('#form_permisos_usuario').submit(function (e) {
     ajaxRequest({ url: '_request/UsersRequest.php', data: $(this).serialize() }, function (data) {
         //muestro toast
     });
-
-    /*verSpinner(true);
-    $.ajax({
-        type: 'POST',
-        url: 'procesar.php',
-        data: $(this).serialize(),
-        success: function (response) {
-            let data = JSON.parse(response);
-
-            if (data.alerta) {
-                Alerta.fire({
-                    icon: data.icon,
-                    title: data.title,
-                    text: data.message
-                });
-            } else {
-                Toast.fire({
-                    icon: data.icon,
-                    text: data.title
-                });
-            }
-            verSpinner(false);
-        }
-    });*/
 });
 
-function getUsuariosMunicipios() {
-    ajaxRequest({ url: '_request/UsersRequest.php', data: {opcion: 'get_usuarios_municipios'}}, function (data) {
-
-        if (data.result) {
-            let selectUsuarios = $('#usuarios_select_usuarios');
-            let selectMunicipios = $('#usuarios_select_municipios');
-            let municipios = data.municipios.length;
-            selectMunicipios.empty();
-            selectMunicipios.append('<option value="">Seleccione</option>');
-            for (let i = 0; i < municipios; i++) {
-                let id = data.municipios[i]['id'];
-                let nombre = data.municipios[i]['nombre'];
-                selectMunicipios.append('<option value="' + id + '">' + nombre + '</option>');
-            }
-            let usuarios = data.usuarios.length;
-            selectUsuarios.empty();
-            selectUsuarios.append('<option value="">Seleccione</option>');
-            for (let i = 0; i < usuarios; i++) {
-                let id = data.usuarios[i]['id'];
-                let nombre = data.usuarios[i]['email'];
-                selectUsuarios.append('<option value="' + id + '">' + nombre + '</option>');
-            }
-        }
-
-    });
-}
-
-function getAccesosMunicipio() {
-    ajaxRequest({ url: '_request/UsersRequest.php', data: {opcion: 'get_acceso_municipios'}, html: 'si'}, function (data) {
-        $('#usuario_card_table').html(data);
-        datatable('usuario_table_acceso');
-        $('#btn_reset_acceso_municipio').click();
-    });
-}
-
-$('#modal_acceso_form').submit(function (e) {
-    e.preventDefault()
-    let procesar = true;
-    let usuario = $('#usuarios_select_usuarios');
-    let municipios = $('#usuarios_select_municipios');
-
-    if (usuario.val().length <= 0) {
-        procesar = false;
-        usuario.addClass('is-invalid');
-        $('#error_usuarios_select_usuarios').text('El Usuario es obligatorio.');
-    } else {
-        usuario.removeClass('is-invalid');
-        usuario.addClass('is-valid');
-    }
-
-    if (municipios.val().length <= 0) {
-        procesar = false;
-        municipios.addClass('is-invalid');
-        $('#error_usuarios_select_municipios').text('Municipios es obligatorio.');
-    } else {
-        municipios.removeClass('is-invalid');
-        municipios.addClass('is-valid');
-    }
-
-    if (procesar) {
-
-        ajaxRequest({ url: '_request/UsersRequest.php', data: $(this).serialize()}, function (data) {
-
-            if (data.result){
-
-                let table = $('#usuario_table_acceso').DataTable();
-
-                if (data.remove){
-                    let item = $('#btn_eliminar_acceso_' + data.id).closest('tr');
-                    table
-                        .row(item)
-                        .remove()
-                        .draw();
-                }
-
-                let buttons = '<div class="btn-group btn-group-sm">\n' +
-                    '                                <button type="button" class="btn btn-info" onclick="destroyAcceso(' + data.id + ')" id="btn_eliminar_acceso_' + data.id + '" >\n' +
-                    '                                    <i class="far fa-trash-alt"></i>\n' +
-                    '                                </button>\n' +
-                    '                            </div>';
-
-                table.row.add([
-                    data.item,
-                    data.email,
-                    data.municipios,
-                    buttons
-                ]).draw();
-
-                let nuevo = $('#usuario_table_acceso tr:last');
-                nuevo.attr('id', 'tr_item_' + data.id)
-                $('#btn_reset_acceso_municipio').click();
-                $('#paginate_leyenda_acceso').text(data.total);
-            }
-
-        });
-
-    }
-});
-
-function destroyAcceso(id) {
-    MessageDelete.fire().then((result) => {
-        if (result.isConfirmed) {
-
-            ajaxRequest({ url: '_request/UsersRequest.php', data: {opcion: 'eliminar_acceso', id: id}}, function (data) {
-
-                if (data.result) {
-
-                    let table = $('#usuario_table_acceso').DataTable();
-                    let item = $('#btn_eliminar_acceso_' + id).closest('tr');
-                    table
-                        .row(item)
-                        .remove()
-                        .draw();
-
-                    $('#paginate_leyenda_acceso').text(data.total);
-                }
-
-            });
-
-        }
-    });
-}
-
-function resetFormAcceso() {
-    let usuario = $('#usuarios_select_usuarios');
-    let municipios = $('#usuarios_select_municipios');
-    usuario
-        .removeClass('is-valid')
-        .removeClass('is-invalid')
-        .val("")
-        .trigger('change');
-    municipios
-        .removeClass('is-valid')
-        .removeClass('is-invalid')
-        .val("")
-        .trigger('change');
-}
 
 console.log('Usuarios.!');

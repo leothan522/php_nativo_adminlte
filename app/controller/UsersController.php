@@ -120,5 +120,197 @@ class UsersController extends Admin
         return $response;
     }
 
+    public function edit($id): array
+    {
+        $model = new User();
+        $user = $model->find($id);
+
+        if ($user) {
+
+            $response = crearResponse(
+                null,
+                true,
+                'Editar Usuario.',
+                "Mostrando Usuario " . $user['name'],
+                'success',
+                false,
+                true
+            );
+            //datos extras para el $response
+            $response['id'] = $user['id'];
+            $response['name'] = $user['name'];
+            $response['email'] = $user['email'];
+            $response['telefono'] = $user['telefono'];
+            $response['tipo'] = verRoleUsuario($user['role']);
+            $response['estatus'] = verEstatusUsuario($user['estatus'], false);
+            $response['fecha'] = verFecha($user['created_at']);
+            $response['band'] = $user['estatus'];
+            $response['role'] = $user['role'];
+            $response['permisos'] = $user['permisos'];
+
+        } else {
+            $response = crearResponse(
+                'no_user',
+                false,
+                'Usuario NO encontrado.',
+                'El id del usuario no esta disponible.',
+                'warning',
+                true
+            );
+        }
+        return $response;
+    }
+
+    public function setEstatus($id): array
+    {
+        $response = $this->edit($id);
+        if ($response['result']){
+            $estatus = $response['band'];
+            $model = new User();
+            if ($estatus) {
+                $model->update($id, 'estatus', 0);
+                $title = 'Usuario Inactivo';
+                $icono = 'info';
+                $newEstatus = 0;
+                $verEstatus = verEstatusUsuario(0, false);
+            } else {
+                $model->update($id, 'estatus', 1);
+                $title = 'Usuario Activo';
+                $icono = 'success';
+                $newEstatus = 1;
+                $verEstatus = verEstatusUsuario(1, false);
+            }
+            $response['estatus'] = $verEstatus;
+            $response['band'] = $newEstatus;
+            $response['table_estatus'] = '<p class="text-center">' . verEstatusUsuario($newEstatus) . '</p>';
+        }
+        return $response;
+    }
+
+    public function setPassword($id, $password): array
+    {
+        $response = $this->edit($id);
+        if ($response['result']){
+            $model = new User();
+            if (empty($password)) {
+                $password = generar_string_aleatorio();
+            }
+            $db_password = password_hash($password, PASSWORD_DEFAULT);
+            $model->update($id, 'password', $db_password);
+            $response['toast'] = false;
+            $response['title'] = 'Contraseña Guardada.';
+            $response['message'] = $password;
+        }
+        return $response;
+    }
+
+    public function update($id, $name, $email, $telefono, $tipo): array
+    {
+        $model = new User();
+        $updated_at = date('Y-m-d');
+
+        $existeEmail = $model->existe('email', '=', $email, $id, 1);
+
+        if (!$existeEmail) {
+
+            $user = $model->find($id);
+            $db_name = $user['name'];
+            $db_email = $user['email'];
+            $db_telefono = $user['telefono'];
+            $db_tipo = $user['role'];
+
+            $cambios = false;
+
+            if ($db_name != $name) {
+                $cambios = true;
+                $model->update($id, 'name', $name);
+            }
+
+            if ($db_email != $email) {
+                $cambios = true;
+                $model->update($id, 'email', $email);
+            }
+
+            if ($db_telefono != $telefono) {
+                $cambios = true;
+                $model->update($id, 'telefono', $telefono);
+            }
+
+            if ($db_tipo != $tipo) {
+                $cambios = true;
+                $model->update($id, 'role', $tipo);
+            }
+
+            if ($cambios) {
+
+                $model->update($id, 'updated_at', $updated_at);
+                $response = $this->edit($id);
+                $response['toast'] = false;
+                $response['title'] = 'Cambios Guardados.';
+                $response['message'] = $name . " Actualizado.";
+                $response['table_telefono'] = '<p class="text-center">' . $response['telefono'] . '</p>';
+                $response['table_role'] = '<p class="text-center">' . verRoleUsuario($response['role']) . '</p>';
+            } else {
+                $response = crearResponse('no_cambios');
+            }
+
+        } else {
+            $response = crearResponse(
+                'email_duplicado',
+                false,
+                'Email Duplicado.',
+                'El email ya esta registrado.',
+                'warning'
+            );
+        }
+        return $response;
+    }
+
+    public function delete($id)
+    {
+        $model = new User();
+        $user = $model->find($id);
+        if ($user) {
+            $model->update($id, 'band', 0);
+            $model->update($id, 'deleted_at', date("Y-m-d"));
+            $response = crearResponse(
+                null,
+                true,
+                'Usuario Eliminado.',
+                'Usuario Eliminado.'
+            );
+            //datos extras para el $response
+            $response['total'] = $model->count(1);
+        } else {
+            $response = crearResponse(
+                'no_user',
+                false,
+                'Usuario NO encontrado."',
+                'El id del usuario no esta disponible.',
+                'warning',
+                true
+            );
+        }
+        return $response;
+    }
+
+    public function setPermisos($id, $permisos): array
+    {
+        $model = new User();
+        $model->update($id, 'permisos', crearJson($permisos));
+        $response = $this->edit($id);
+        if (!is_null($response['permisos'])) {
+            $response['user_permisos'] = json_decode($response['permisos']);
+        } else {
+            $response['user_permisos'] = null;
+        }
+        $permisos = verPermisos();
+        $response['permisos'] = $permisos[1];
+        $response['toast'] = false;
+        $response['title'] = 'Permisos Guardados.';
+        $response['message'] = "Mostrando Usuario " . $response['name'];
+        return $response;
+    }
+
 
 }

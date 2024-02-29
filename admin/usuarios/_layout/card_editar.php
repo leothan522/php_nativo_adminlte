@@ -80,10 +80,10 @@
         <!-- /.card-body -->
 
         <div class="card-footer">
-            <input type="hidden" name="opcion" value="editar" id="edit_opcion">
+            <input type="hidden" name="opcion" value="update" id="edit_opcion">
             <input type="hidden" name="id" id="edit_id">
             <button type="submit" class="btn btn-primary">Guardar Cambios</button>
-            <button type="reset" class="btn btn-default float-right" onclick="getUser()" id="btn_edit_cancelar">Restablecer</button>
+            <button type="reset" class="btn btn-default float-right" onclick="edit()" id="btn_edit_cancelar">Restablecer</button>
         </div>
     </div>
 </form>

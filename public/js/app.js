@@ -38,6 +38,7 @@ function ajaxRequest(solicitud, callback) {
     //valores por defecto
     let type = 'POST';
     let url = 'procesar.php';
+    let html = 'no';
 
     //comprobamos si recibimos valores personalizados
     //para reemplazar los valores por defecto
@@ -46,6 +47,9 @@ function ajaxRequest(solicitud, callback) {
     }
     if (solicitud.url) {
         url = solicitud.url;
+    }
+    if (solicitud.html) {
+        html = solicitud.html;
     }
 
     //realizamos la peticion AJAX
@@ -81,6 +85,14 @@ function ajaxRequest(solicitud, callback) {
                 }
             } else {
                 respuesta = { html: response, is_json: false };
+                if (html === 'no'){
+                    respuesta.result = false;
+                    Alerta.fire({
+                        icon: 'error',
+                        title: 'Error JSON',
+                        text: 'La respuesta Ajax NO contiene un JSON Valido. Verifique en la Consola del Navegador'
+                    });
+                }
             }
             callback(respuesta);
         },

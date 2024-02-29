@@ -26,7 +26,7 @@ $i = $controller->offset;
     </div>
     <!-- /.card-header -->
     <div class="card-body">
-        <div class="table mt-3">
+        <div class="table table-responsive mt-3">
             <table class="table" id="tabla_usuarios">
                 <thead>
                 <tr>

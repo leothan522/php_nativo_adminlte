@@ -76,16 +76,17 @@ $('#form_create_user').submit(function (e) {
 
     if (procesar) {
 
-        ajaxRequest({ url: '_request/UsersRequest.php', data: $(this).serialize()}, function (data) {
+        ajaxRequest({ url: '_request/UsersRequest.php', data: $(this).serialize(), html: 'si' }, function (data) {
 
-            if (data.is_json) {
-                if (data.error === "email_duplicado") {
+            if (data.is_json){
+                if (data.error === 'email_duplicado')
+                {
                     email.addClass('is-invalid');
-                    $('#error_email').text("email ya registrado.");
+                    $('#error_email').text(data.message);
                 }
-            } else {
-                    $('#dataContainer').html(data.html);
-                    datatable('tabla_usuarios');
+            }else {
+                $('#dataContainer').html(data.html);
+                datatable('tabla_usuarios');
             }
 
         });

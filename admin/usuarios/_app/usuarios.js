@@ -78,64 +78,14 @@ $('#form_create_user').submit(function (e) {
 
         ajaxRequest({ url: '_request/UsersRequest.php', data: $(this).serialize()}, function (data) {
 
-            if (data.result) {
-
-                let table = $('#tabla_usuarios').DataTable();
-                let btn_editar = '';
-                let btn_eliminar = '';
-                let btn_estatus = '';
-
-                if (!data.btn_editar) {
-                    btn_editar = 'disabled';
-                }
-
-                if (!data.btn_eliminar) {
-                    btn_eliminar = 'disabled';
-                }
-
-                if (!data.btn_permisos) {
-                    btn_estatus = 'disabled';
-                }
-
-                let buttons = '<div class="btn-group btn-group-sm">\n' +
-                    '                                <button type="button" class="btn btn-info" onclick="getUser(' + data.id + ')"\n' +
-                    '                                        data-toggle="modal" data-target="#modal_edit_usuarios" ' + btn_editar + '>\n' +
-                    '                                    <i class="fas fa-user-edit"></i>\n' +
-                    '                                </button>\n' +
-                    '                                <button type="button" class="btn btn-info" data-toggle="modal" data-target="#modal_permisos" onclick="getPermisos(' + data.id + ')" ' + btn_estatus + ' >\n' +
-                    '                                    <i class="fas fa-user-shield"></i>\n' +
-                    '                                </button>\n' +
-                    '                                <button type="button" class="btn btn-info" onclick="destroyUser(' + data.id + ')" id="btn_eliminar_' + data.id + '" ' + btn_eliminar + ' >\n' +
-                    '                                    <i class="far fa-trash-alt"></i>\n' +
-                    '                                </button>\n' +
-                    '                            </div>';
-
-                table.row.add([
-                    data.item,
-                    data.name,
-                    data.email,
-                    data.telefono,
-                    data.role,
-                    data.estatus,
-                    buttons
-                ]).draw();
-
-                let nuevo = $('#tabla_usuarios tr:last');
-                nuevo.attr('id', 'tr_item_' + data.id)
-                nuevo.find("td:eq(1)").addClass('nombre');
-                nuevo.find("td:eq(2)").addClass('email');
-                nuevo.find("td:eq(3)").addClass('telefono');
-                nuevo.find("td:eq(4)").addClass('role');
-                nuevo.find("td:eq(5)").addClass('estatus');
-
-                $('#btn_reset_create_user').click();
-                $('#paginate_leyenda').text(data.total);
-
-            } else {
+            if (data.is_json) {
                 if (data.error === "email_duplicado") {
                     email.addClass('is-invalid');
                     $('#error_email').text("email ya registrado.");
                 }
+            } else {
+                    $('#dataContainer').html(data.html);
+                    datatable('tabla_usuarios');
             }
 
         });

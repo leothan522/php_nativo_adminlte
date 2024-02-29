@@ -53,7 +53,6 @@ if ($_POST) {
                     break;
 
                 case 'store':
-                    $paginate = true;
 
                     if (validarPermisos('usuarios.create')) {
                         if (
@@ -68,9 +67,12 @@ if ($_POST) {
                             $password = password_hash($_POST['password'], PASSWORD_DEFAULT);
                             $telefono = $_POST['telefono'];
                             $tipo = $_POST['tipo'];
-                            $controller->store($name, $email, $password, $telefono, $tipo);
-                            $controller->index();
-                            require_once "../_layout/card_table.php";
+                            $response = $controller->store($name, $email, $password, $telefono, $tipo);
+                            if ($response['result']){
+                                $paginate = true;
+                                $controller->index();
+                                require_once "../_layout/card_table.php";
+                            }
                         } else {
                             $response = crearResponse('faltan_datos');
                         }

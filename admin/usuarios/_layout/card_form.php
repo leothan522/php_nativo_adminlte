@@ -89,7 +89,7 @@
         <!-- /.card-body -->
 
         <div class="card-footer">
-            <input type="hidden" name="opcion" value="guardar" id="opcion">
+            <input type="hidden" name="opcion" value="store" id="opcion">
             <button type="submit" class="btn btn-primary">Crear Usuario</button>
             <button type="reset" class="btn btn-default float-right" onclick="resetForm()" id="btn_reset_create_user">Cancelar</button>
         </div>

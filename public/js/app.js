@@ -38,7 +38,6 @@ function ajaxRequest(solicitud, callback) {
     //valores por defecto
     let type = 'POST';
     let url = 'procesar.php';
-    let html = 'no';
 
     //comprobamos si recibimos valores personalizados
     //para reemplazar los valores por defecto
@@ -47,9 +46,6 @@ function ajaxRequest(solicitud, callback) {
     }
     if (solicitud.url) {
         url = solicitud.url;
-    }
-    if (solicitud.html) {
-        html = solicitud.html;
     }
 
     //realizamos la peticion AJAX
@@ -66,25 +62,25 @@ function ajaxRequest(solicitud, callback) {
         // la respuesta es pasada como argumento a la función
         success: function (response) {
             let respuesta;
-            if (html === 'no') {
+            if (is_json(response)) {
                 respuesta = JSON.parse(response);
-            } else {
-                respuesta = response;
-            }
-
-            if (respuesta.alerta) {
-                Alerta.fire({
-                    icon: respuesta.icon,
-                    title: respuesta.title,
-                    text: respuesta.message
-                });
-            } else {
-                if (html === 'no' && !respuesta.toast) {
-                    Toast.fire({
+                respuesta.is_json = true;
+                if (respuesta.alerta) {
+                    Alerta.fire({
                         icon: respuesta.icon,
-                        text: respuesta.title
+                        title: respuesta.title,
+                        text: respuesta.message
                     });
+                } else {
+                    if (!respuesta.toast) {
+                        Toast.fire({
+                            icon: respuesta.icon,
+                            text: respuesta.title
+                        });
+                    }
                 }
+            } else {
+                respuesta = { html: response, is_json: false };
             }
             callback(respuesta);
         },
@@ -107,6 +103,16 @@ function ajaxRequest(solicitud, callback) {
         }
 
     });
+}
+
+//Function is_json.
+function is_json(str) {
+    try {
+        JSON.parse(str);
+    } catch (e) {
+        return false;
+    }
+    return true;
 }
 
 /*

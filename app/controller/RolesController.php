@@ -169,11 +169,18 @@ class RolesController extends Admin
             );
             $response['id'] = $id;
             $response['rows'] = $model->count(null, 'tabla_id', '=', -1);
-            foreach ($model->getList('tabla_id', '=', -1) as $rol) {
-                $id = $rol['id'];
-                $nombre = $rol['nombre'];
-                $response['roles'][] = array("id" => $id, "nombre" => $nombre);
+            $roles = $model->getList('tabla_id', '=', -1);
+            if ($roles){
+                foreach ($roles as $rol) {
+                    $id = $rol['id'];
+                    $nombre = $rol['nombre'];
+                    $response['roles'][] = array("id" => $id, "nombre" => $nombre);
+                }
+            }else{
+                $response['roles'] = array();
             }
+
+
         }
         return $response;
     }

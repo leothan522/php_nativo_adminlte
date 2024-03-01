@@ -155,11 +155,15 @@ class UsersController extends Admin
             $response['name'] = $user['name'];
             $response['email'] = $user['email'];
             $response['telefono'] = $user['telefono'];
-            $response['tipo'] = verRoleUsuario($user['role']);
-            $response['estatus'] = verEstatusUsuario($user['estatus'], false);
+            $response['tipo'] = $this->getRol($user['role'], $user['role_id']);
+            $response['estatus'] = $this->verEstatusUsuario($user['estatus'], false);
             $response['fecha'] = verFecha($user['created_at']);
             $response['band'] = $user['estatus'];
-            $response['role'] = $user['role'];
+            if ($user['role'] == 2){
+                $response['role'] = $user['role_id'];
+            }else{
+                $response['role'] = $user['role'];
+            }
             $response['permisos'] = $user['permisos'];
 
         } else {
@@ -186,17 +190,17 @@ class UsersController extends Admin
                 $title = 'Usuario Inactivo';
                 $icono = 'info';
                 $newEstatus = 0;
-                $verEstatus = verEstatusUsuario(0, false);
+                $verEstatus = $this->verEstatusUsuario(0, false);
             } else {
                 $model->update($id, 'estatus', 1);
                 $title = 'Usuario Activo';
                 $icono = 'success';
                 $newEstatus = 1;
-                $verEstatus = verEstatusUsuario(1, false);
+                $verEstatus = $this->verEstatusUsuario(1, false);
             }
             $response['estatus'] = $verEstatus;
             $response['band'] = $newEstatus;
-            $response['table_estatus'] = '<p class="text-center">' . verEstatusUsuario($newEstatus) . '</p>';
+            $response['table_estatus'] = '<p class="text-center">' . $this->verEstatusUsuario($newEstatus) . '</p>';
         }
         return $response;
     }
@@ -252,7 +256,19 @@ class UsersController extends Admin
 
             if ($db_tipo != $tipo) {
                 $cambios = true;
+                if ($tipo > 1 && $tipo < 99){
+                    $modelRol = new Parametros();
+                    $rol = $modelRol->find($tipo);
+                    $role_id = $rol['id'];
+                    $permisos = $rol['valor'];
+                    $tipo = 2;
+                }else{
+                    $role_id = 0;
+                    $permisos = null;
+                }
                 $model->update($id, 'role', $tipo);
+                $model->update($id, 'role_id', $role_id);
+                $model->update($id, 'permisos', $permisos);
             }
 
             if ($cambios) {
@@ -332,5 +348,47 @@ class UsersController extends Admin
         $this->roles = $model->getList('tabla_id', '=', -1);
     }
 
+    public function getRol($role, $role_id): mixed
+    {
+        switch ($role) {
+            case 0:
+                $verRole = 'Público';
+                break;
+            case 1:
+                $verRole = 'Estandar';
+                break;
+            case 99:
+                $verRole = 'Administrador';
+                break;
+            case 100:
+                $verRole = 'Root';
+                break;
+            default:
+                $model = new Parametros();
+                $rol = $model->find($role_id);
+                $verRole = $rol['nombre'];
+                break;
+        }
+
+        return $verRole;
+    }
+
+    public  function verEstatusUsuario($estatus, $icon = true): string
+    {
+        if (!$icon) {
+            $suspendido = "Suspendido";
+            $activado = "Activo";
+        } else {
+            $suspendido = '<i class="fas fa-user-times"></i>';
+            $activado = '<i class="fa fa-user-check"></i>';
+        }
+
+        $status = [
+            '0' => '<span class="text-danger">' . $suspendido . '</span>',
+            '1' => '<span class="text-success">' . $activado . '</span>'/*,
+        '2' => '<span class="text-success">Confirmado</span>'*/
+        ];
+        return $status[$estatus];
+    }
 
 }

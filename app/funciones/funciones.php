@@ -79,44 +79,6 @@ function verCargando(): void
       ';
 }
 
-function verEstatusUsuario($estatus, $icon = true): string
-{
-    if (!$icon) {
-        $suspendido = "Suspendido";
-        $activado = "Activo";
-    } else {
-        $suspendido = '<i class="fas fa-user-times"></i>';
-        $activado = '<i class="fa fa-user-check"></i>';
-    }
-
-    $status = [
-        '0' => '<span class="text-danger">' . $suspendido . '</span>',
-        '1' => '<span class="text-success">' . $activado . '</span>'/*,
-        '2' => '<span class="text-success">Confirmado</span>'*/
-    ];
-    return $status[$estatus];
-}
-
-function verRoleUsuario($role)
-{
-    $verRole = null;
-    switch ($role) {
-        case 0:
-            $verRole = 'Público';
-            break;
-        case 99:
-            $verRole = 'Administrador';
-            break;
-        case 100:
-            $verRole = 'Root';
-            break;
-        default:
-            $verRole = 'Estandar';
-            break;
-    }
-    return $verRole;
-}
-
 function formatoMillares($cantidad, $decimales = 0): string
 {
     if (is_null($cantidad)){ $cantidad = 0; }

@@ -49,8 +49,8 @@ $i = $controller->offset;
                         <td class="nombre"><?php echo $user['name'] ?></td>
                         <td class="email"><?php echo $user['email'] ?></td>
                         <td class="telefono text-center"><?php echo $user['telefono'] ?></td>
-                        <td class="role text-center"><?php echo verRoleUsuario($user['role']) ?></td>
-                        <td class="estatus text-center"><?php echo verEstatusUsuario($user['estatus']) ?></td>
+                        <td class="role text-center"><?php echo $controller->getRol($user['role'], $user['role_id']) ?></td>
+                        <td class="estatus text-center"><?php echo $controller->verEstatusUsuario($user['estatus']) ?></td>
                         <td>
                             <div class="btn-group btn-group-sm">
                                 <button type="button" class="btn btn-info" onclick="edit(<?php echo $user['id'] ?>)"

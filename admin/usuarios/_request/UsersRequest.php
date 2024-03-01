@@ -37,6 +37,12 @@ if ($_POST) {
 
                     break;
 
+                case 'index':
+                    $paginate = true;
+                    $controller->index();
+                    require_once "../_layout/card_table.php";
+                    break;
+
                 case 'generar_clave':
 
                     $password = generar_string_aleatorio();
@@ -208,6 +214,8 @@ if ($_POST) {
                     }
 
                     break;
+
+                    
 
             //Por defecto
         default:

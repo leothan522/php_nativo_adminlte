@@ -3,6 +3,7 @@ $listarUsuarios = $controller->rows;
 $links = $controller->links;
 $userRole = $controller->USER_ROLE;
 $i = $controller->offset;
+$x = 0;
 ?>
 <div class="card card-outline card-primary">
     <div class="card-header">
@@ -43,6 +44,7 @@ $i = $controller->offset;
                 <?php
                 foreach ($listarUsuarios as $user) {
                     $i++;
+                    $x++;
                     ?>
                     <tr id="tr_item_<?php echo $user['id']; ?>">
                         <td class="text-center"><?php echo $i ?></td>
@@ -82,6 +84,7 @@ $i = $controller->offset;
     <!-- /.card-body -->
     <div class="card-footer clearfix">
         <?php echo $links ?>
+        <input type="hidden" value="<?php echo $x ?>" placeholder="valor_x" name="valor_x" id="input_hidden_valor_x">
         <!--<ul class="pagination pagination-sm m-0 float-right">
             <li class="page-item"><a class="page-link" href="#">&laquo;</a></li>
             <li class="page-item"><a class="page-link" href="#">1</a></li>

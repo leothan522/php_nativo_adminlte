@@ -7,6 +7,8 @@ inputmask('#edit_name', 'alfa', 3, 50, ' ');
 inputmaskTelefono('#telefono');
 inputmaskTelefono('#edit_telefono');
 
+$("#navbar_buscar").removeClass('d-none');
+
 
 //Generar Clave Aleatoria
 function generarClave() {
@@ -303,7 +305,7 @@ $('#form_editar_user').submit(function (e) {
 function destroy(id) {
     MessageDelete.fire().then((result) => {
         if (result.isConfirmed) {
-
+            let valor_x = $('#input_hidden_valor_x').val();
             ajaxRequest({ url: '_request/UsersRequest.php', data: {opcion: 'delete', id: id}}, function (data) {
 
                 if (data.result) {
@@ -316,10 +318,23 @@ function destroy(id) {
                         .draw();
 
                     $('#paginate_leyenda').text(data.total);
+                    valor_x = valor_x - 1;
+                    if (valor_x === 0){
+                        reconstruirTabla();
+                    }else {
+                        $('#input_hidden_x').val(valor_x);
+                    }
                 }
 
             });
         }
+    });
+}
+
+function reconstruirTabla() {
+    ajaxRequest({ url: '_request/UsersRequest.php', data: { opcion: 'index'}, html: 'si' }, function (data) {
+        $('#dataContainer').html(data.html);
+        datatable('tabla_usuarios');
     });
 }
 

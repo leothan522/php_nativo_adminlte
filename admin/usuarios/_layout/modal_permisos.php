@@ -21,8 +21,8 @@
                         </div>
                     </div>
 
-                    <div class="row">
-                        <?php require_once "permisos.php"; ?>
+                    <div class="row" id="html_permisos_usuario">
+                        <!--JS-->
                     </div>
 
                 </div>

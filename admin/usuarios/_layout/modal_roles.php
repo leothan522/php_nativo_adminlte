@@ -32,11 +32,8 @@
                         </div>
                     </div>
 
-                    <div class="row">
-                        <?php
-                        $permisos = verPermisos('_role');
-                        echo $permisos[0];
-                        ?>
+                    <div class="row" id="html_roles_usuario">
+                        <!--JS-->
                     </div>
 
                 </div>

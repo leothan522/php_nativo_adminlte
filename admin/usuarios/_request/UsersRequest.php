@@ -183,6 +183,7 @@ if ($_POST) {
                         }
                         $permisos = verPermisos();
                         $response['permisos'] = $permisos[1];
+                        $response['html_permisos'] = $permisos[0];
                     } else {
                         $response = crearResponse('faltan_datos');
                     }

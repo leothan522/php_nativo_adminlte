@@ -100,8 +100,9 @@ class RolesController extends Admin
         } else {
             $response['user_permisos'] = null;
         }
-        $permisos = verPermisos();
+        $permisos = verPermisos('_role');
         $response['permisos'] = $permisos[1];
+        $response['html_permisos'] = $permisos[0];
         foreach ($model->getList('tabla_id', '=', -1) as $rol) {
             $id = $rol['id'];
             $nombre = ucfirst($rol['nombre']);

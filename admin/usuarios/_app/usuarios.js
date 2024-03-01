@@ -342,11 +342,13 @@ function getPermisos(id) {
             $('#li_permisos_email').text(data.email);
             $('#li_permisos_role').text(data.tipo);
             $('#input_permisos_id').val(data.id);
+            $('#html_permisos_usuario').html(data.html_permisos);
 
             if (data.permisos != null) {
                 data.permisos.forEach((key, value) => {
                     key = key.replace('.', '_');
                     $('#' + key).removeAttr('checked');
+                    console.log('#' + key)
                 });
             }
 

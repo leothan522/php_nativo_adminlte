@@ -22,7 +22,6 @@ function editRol(id) {
     ajaxRequest({url: '_request/RolesRequest.php', data: { id: id, opcion: 'edit' } }, function (data) {
         if (data.result){
             show(data);
-
         }
     } );
 }
@@ -43,6 +42,7 @@ function show(data) {
     $('#modal_input_nombre').val(data.nombre);
     $('#modal_li_rol_nombre').text(data.nombre);
     $('#modal_input_roles_id').val(data.id);
+    $('#html_roles_usuario').html(data.html_permisos);
 
     if (data.permisos != null) {
         data.permisos.forEach((key, value) => {

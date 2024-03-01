@@ -193,6 +193,16 @@ function crearResponse($error = null, $result = false, $title = null, $message =
             $response['message'] = "El usuario actual no tiene permisos suficientes para realizar esta acción. Contacte con su Administrador.";
             break;
 
+        case 'vinculado':
+            $response['result'] = false;
+            $response['alerta'] = true;
+            $response['error'] = "si_vinculado";
+            $response['icon'] = "warning";
+            $response['title'] = "¡No se puede Borrar!";
+            $response['message'] = "El registro que intenta borrar ya se encuentra vinculado con otros procesos.";
+
+            break;
+
         default:
             $response['result'] = $result;
             $response['alerta'] = $alerta;

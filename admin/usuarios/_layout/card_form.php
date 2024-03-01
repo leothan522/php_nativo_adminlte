@@ -71,9 +71,9 @@
 
                 <select class="custom-select rounded-0" name="tipo" id="tipo">
                     <option value="">Seleccione</option>
-                    <option value="0">Usuario Público</option>
-                    <option value="1">Usuario Estandar</option>
-                    <option value="99">Usuario Administrador</option>
+                    <option value="0">Público</option>
+                    <option value="1">Estandar</option>
+                    <option value="99">Administrador</option>
                 </select>
 
                 <div class="input-group-append">

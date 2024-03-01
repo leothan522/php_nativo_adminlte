@@ -152,7 +152,7 @@ function sidebar($modulo = null): ?string
     return $html;
 }
 
-function verPermisos(): array
+function verPermisos($role = null): array
 {
 
     $permisos = [
@@ -210,7 +210,7 @@ function verPermisos(): array
     foreach ($permisos as $menu) {
         $i++;
         $explode = explode('.', $menu['permiso']);
-        $id = $explode[0] . '_' . $explode[1];
+        $id = $explode[0] . '_' . $explode[1] . $role;
         $array[] = $id;
         $html .= '<div class="col-md-4">
                 <div class="card card-primary card-outline collapsed-card">
@@ -233,7 +233,7 @@ function verPermisos(): array
         foreach ($menu['opciones'] as $item) {
             $i++;
             $explode = explode('.', $item['permiso']);
-            $id = $explode[0] . '_' . $explode[1];
+            $id = $explode[0] . '_' . $explode[1] . $role;
             $array[] = $id;
             $html .= '<div class="form-group">
                     <div class="custom-control custom-checkbox">';

@@ -4,6 +4,7 @@ namespace app\controller;
 
 use app\middleware\Admin;
 use app\model\Municipio;
+use app\model\Parametros;
 use app\model\User;
 
 class UsersController extends Admin
@@ -16,7 +17,7 @@ class UsersController extends Admin
     public $limit;
     public $totalRows;
     public $offset;
-    public $pag = 0;
+    public $roles;
 
     public function isAdmin()
     {
@@ -76,12 +77,25 @@ class UsersController extends Admin
 
         if (!$existeEmail) {
 
+            if ($tipo > 1 && $tipo < 99){
+                $modelRol = new Parametros();
+                $rol = $modelRol->find($tipo);
+                $role_id = $rol['id'];
+                $permisos = $rol['valor'];
+                $tipo = 2;
+            }else{
+                $role_id = 0;
+                $permisos = null;
+            }
+
             $data = [
                 $name,
                 $email,
                 $password,
                 $telefono,
                 $tipo,
+                $role_id,
+                $permisos,
                 $created_at
             ];
 
@@ -310,6 +324,12 @@ class UsersController extends Admin
         $response['title'] = 'Permisos Guardados.';
         $response['message'] = "Mostrando Usuario " . $response['name'];
         return $response;
+    }
+
+    public function getRoles()
+    {
+        $model = new Parametros();
+        $this->roles = $model->getList('tabla_id', '=', -1);
     }
 
 

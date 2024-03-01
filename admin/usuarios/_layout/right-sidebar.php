@@ -28,7 +28,7 @@ $controller->index();
     <div class="col-md-12 justify-content-center" id="right_sidebar_div_listar_roles">
         <?php foreach ($controller->rows as $rol){ ?>
             <button type="button" class="btn btn-primary btn-sm btn-block m-1" data-toggle="modal"
-                    data-target="#modal_roles_usuarios" onclick="edit(<?php echo $rol['id']; ?>)"
+                    data-target="#modal_roles_usuarios" onclick="editRol(<?php echo $rol['id']; ?>)"
                     <?php if (!validarPermisos()){ echo 'disabled'; } ?>
                     id="button_role_id_<?php echo $rol['id']; ?>">
                 <?php echo ucfirst($rol['nombre']); ?>

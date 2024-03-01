@@ -62,6 +62,11 @@ class RolesController extends Admin
             $response['id'] = $rol['id'];
             $response['nombre'] = ucfirst($rol['nombre']);
             $response['rows'] = $model->count(null, 'tabla_id', '=', -1);
+            foreach ($model->getList('tabla_id', '=', -1) as $rol) {
+                $id = $rol['id'];
+                $nombre = ucfirst($rol['nombre']);
+                $response['roles'][] = array("id" => $id, "nombre" => $nombre);
+            }
         }else{
             $response = crearResponse(
                 'nombre_duplicado',
@@ -97,6 +102,11 @@ class RolesController extends Admin
         }
         $permisos = verPermisos();
         $response['permisos'] = $permisos[1];
+        foreach ($model->getList('tabla_id', '=', -1) as $rol) {
+            $id = $rol['id'];
+            $nombre = ucfirst($rol['nombre']);
+            $response['roles'][] = array("id" => $id, "nombre" => $nombre);
+        }
         return $response;
     }
 
@@ -104,29 +114,41 @@ class RolesController extends Admin
     {
         $model = new Parametros();
 
-        if (mb_strlen($nombre) < 4){
-            $response = crearResponse(
-                'no_minimo',
-                false,
-                'El Nombre debe tener al menos 4 caracteres.',
-                null,
-                'warning'
-            );
-            return $response;
-        }
+        $existe = $model->existe('nombre', '=', $nombre, $id);
 
-        $model->update($id, 'nombre', $nombre);
-        $model->update($id, 'valor', crearJson($permisos));
-        $response = $this->edit($id);
-        $response['toast'] = false;
-        $response['title'] = 'Cambios Guardados.';
-
-        $model = new User();
-        $listarUsuarios = $model->getList('role_id', '=', $id);
-        if ($listarUsuarios){
-            foreach ($listarUsuarios as $user){
-                $model->update($user['id'], 'permisos', crearJson($permisos));
+        if (!$existe){
+            if (mb_strlen($nombre) < 4){
+                $response = crearResponse(
+                    'no_minimo',
+                    false,
+                    'El Nombre debe tener al menos 4 caracteres.',
+                    null,
+                    'warning'
+                );
+                return $response;
             }
+
+            $model->update($id, 'nombre', $nombre);
+            $model->update($id, 'valor', crearJson($permisos));
+            $response = $this->edit($id);
+            $response['toast'] = false;
+            $response['title'] = 'Cambios Guardados.';
+
+            $model = new User();
+            $listarUsuarios = $model->getList('role_id', '=', $id);
+            if ($listarUsuarios){
+                foreach ($listarUsuarios as $user){
+                    $model->update($user['id'], 'permisos', crearJson($permisos));
+                }
+            }
+        }else{
+            $response = crearResponse(
+                'nombre_duplicado',
+                false,
+                'El Rol ya Existe.',
+                null,
+                'error'
+            );
         }
         return $response;
     }
@@ -147,6 +169,11 @@ class RolesController extends Admin
             );
             $response['id'] = $id;
             $response['rows'] = $model->count(null, 'tabla_id', '=', -1);
+            foreach ($model->getList('tabla_id', '=', -1) as $rol) {
+                $id = $rol['id'];
+                $nombre = $rol['nombre'];
+                $response['roles'][] = array("id" => $id, "nombre" => $nombre);
+            }
         }
         return $response;
     }

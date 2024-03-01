@@ -43,7 +43,7 @@
                 <div class="modal-footer justify-content-between">
                     <input type="hidden" placeholder="input_roles_id" name="id" id="modal_input_roles_id">
                     <input type="hidden" name="opcion" value="update">
-                    <button type="button" class="btn btn-danger" onclick="destroy()"><i class="fas fa-trash-alt"></i></button>
+                    <button type="button" class="btn btn-danger" onclick="destroyRol()"><i class="fas fa-trash-alt"></i></button>
                     <button type="submit" class="btn btn-primary">Guardar Cambios</button>
                     <button type="button" class="btn btn-default" data-dismiss="modal" id="modal_role_btn_cerrar">Cancelar</button>
                 </div>

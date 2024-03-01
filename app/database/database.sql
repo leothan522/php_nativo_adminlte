@@ -26,9 +26,11 @@ CREATE TABLE IF NOT EXISTS `parametros` (
   `tabla_id` int DEFAULT NULL,
   `valor` text CHARACTER SET utf8mb4 COLLATE utf8mb4_spanish_ci,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish_ci;
 
--- Volcando datos para la tabla dashboard_adminlte.parametros: ~0 rows (aproximadamente)
+-- Volcando datos para la tabla dashboard_adminlte.parametros: ~1 rows (aproximadamente)
+INSERT INTO `parametros` (`id`, `nombre`, `tabla_id`, `valor`) VALUES
+	(1, 'fecha_compilacion', NULL, '2024-03-01 10:13:50');
 
 -- Volcando estructura para tabla dashboard_adminlte.users
 CREATE TABLE IF NOT EXISTS `users` (
@@ -54,9 +56,9 @@ CREATE TABLE IF NOT EXISTS `users` (
 
 -- Volcando datos para la tabla dashboard_adminlte.users: ~3 rows (aproximadamente)
 INSERT INTO `users` (`id`, `name`, `email`, `password`, `telefono`, `token`, `date_token`, `path`, `role`, `role_id`, `permisos`, `estatus`, `band`, `created_at`, `updated_at`, `deleted_at`, `dispositivo`) VALUES
-	(1, 'Yonathan Castillo r', 'leothan522@gmail.com', '$2y$10$Hx0iUXf01RZUqq0xBHyVueBg3FoiGpCEtSTZ8tU0rAK30RffBMiAC', '(0424) 338-66.00', NULL, NULL, NULL, 100, 0, NULL, 1, 1, '2023-08-12', NULL, NULL, 0),
+	(1, 'Yonathan Castillo', 'leothan522@gmail.com', '$2y$10$Hx0iUXf01RZUqq0xBHyVueBg3FoiGpCEtSTZ8tU0rAK30RffBMiAC', '(0424) 338-66.00', NULL, NULL, NULL, 100, 0, NULL, 1, 1, '2023-08-12', NULL, NULL, 0),
 	(2, 'Antonny Maluenga', 'gabrielmalu15@gmail.com', '$2y$10$XibWahOwcjxTdM.YWlhrTuA8gJZeyK7fLe9Ge5yrI5loizvfE2sea', '(0412) 199-56.47', NULL, NULL, NULL, 100, 0, NULL, 1, 1, '2023-08-28', NULL, NULL, 0),
-	(3, 'Administrador', 'admin@adminlte.com', '$2y$10$5Fl3weju4a/JQi/x92lIMuXgXUr0dsxp6CIIikPNtNRyjDUlxj4ge', '(0424) 338-66.00', NULL, NULL, NULL, 99, 0, NULL, 0, 0, '2023-09-28', NULL, NULL, 0);
+	(3, 'Administrador', 'admin@adminlte.com', '$2y$10$5Fl3weju4a/JQi/x92lIMuXgXUr0dsxp6CIIikPNtNRyjDUlxj4ge', '(0424) 338-66.00', NULL, NULL, NULL, 99, 0, NULL, 1, 1, '2023-09-28', NULL, NULL, 0);
 
 /*!40103 SET TIME_ZONE=IFNULL(@OLD_TIME_ZONE, 'system') */;
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;

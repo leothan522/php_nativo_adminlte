@@ -7,7 +7,16 @@ $x = 0;
 ?>
 <div class="card card-outline card-primary">
     <div class="card-header">
-        <h3 class="card-title">Usuarios Registrados</h3>
+        <h3 class="card-title">
+            <?php if (empty($controller->keyword)){ ?>
+                Usuarios Registrados
+                <?php }else{ ?>
+                Resultados para la busqueda [ <strong class="text-danger"><?php echo $controller->keyword; ?></strong> ]
+                <button type="button" class="btn btn-tool" onclick="reconstruirTabla()">
+                    <i class="fas fa-times-circle"></i>
+                </button>
+            <?php } ?>
+        </h3>
 
         <div class="card-tools">
             <!--<button type="button" class="btn btn-tool" data-card-widget="card-refresh" data-source="widgets.html" data-source-selector="#card-refresh-content" data-load-on-init="false">
@@ -28,7 +37,7 @@ $x = 0;
     <!-- /.card-header -->
     <div class="card-body">
         <div class="table table-responsive mt-3">
-            <table class="table" id="tabla_usuarios">
+            <table class="table table-sm" id="tabla_usuarios">
                 <thead>
                 <tr>
                     <th class="text-center">#</th>
@@ -83,7 +92,14 @@ $x = 0;
     </div>
     <!-- /.card-body -->
     <div class="card-footer clearfix">
-        <?php echo $links ?>
+        <?php
+        if (empty($controller->keyword)){
+            echo $links;
+        }else{
+            echo "Mostrando ".$x;
+        }
+
+        ?>
         <input type="hidden" value="<?php echo $x ?>" placeholder="valor_x" name="valor_x" id="input_hidden_valor_x">
         <!--<ul class="pagination pagination-sm m-0 float-right">
             <li class="page-item"><a class="page-link" href="#">&laquo;</a></li>

@@ -331,13 +331,6 @@ function destroy(id) {
     });
 }
 
-function reconstruirTabla() {
-    ajaxRequest({ url: '_request/UsersRequest.php', data: { opcion: 'index'}, html: 'si' }, function (data) {
-        $('#dataContainer').html(data.html);
-        datatable('tabla_usuarios');
-    });
-}
-
 //Actualizar datos del usuario en Modal Permisos
 function getPermisos(id) {
 
@@ -376,6 +369,23 @@ $('#form_permisos_usuario').submit(function (e) {
     ajaxRequest({ url: '_request/UsersRequest.php', data: $(this).serialize() }, function (data) {
         //muestro toast
     });
+});
+
+function reconstruirTabla() {
+    ajaxRequest({ url: '_request/UsersRequest.php', data: { opcion: 'index'}, html: 'si' }, function (data) {
+        $('#dataContainer').html(data.html);
+        datatable('tabla_usuarios');
+    });
+}
+
+$('#navbar_form_buscar').submit(function (e) {
+    e.preventDefault();
+    let keyword = $('#navbar_input_buscar').val();
+    ajaxRequest({ url: '_request/UsersRequest.php', data: { opcion: 'search', keyword: keyword}, html: 'si' }, function (data) {
+        $('#dataContainer').html(data.html);
+        datatable('tabla_usuarios');
+    });
+
 });
 
 

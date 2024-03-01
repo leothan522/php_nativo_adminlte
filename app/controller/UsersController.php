@@ -18,6 +18,7 @@ class UsersController extends Admin
     public $totalRows;
     public $offset;
     public $roles;
+    public $keyword;
 
     public function isAdmin()
     {
@@ -389,6 +390,13 @@ class UsersController extends Admin
         '2' => '<span class="text-success">Confirmado</span>'*/
         ];
         return $status[$estatus];
+    }
+
+    public function search($keyword){
+        $model = new User();
+        $this->keyword = $keyword;
+        $sql = "SELECT * FROM users WHERE name LIKE '%$keyword%' OR email LIKE '%$keyword%' OR telefono LIKE '%$keyword%' LIMIT 100;";
+        $this->rows = $model->sqlPersonalizado($sql, 'getAll');
     }
 
 }

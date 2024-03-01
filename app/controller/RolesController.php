@@ -61,7 +61,7 @@ class RolesController extends Admin
             );
             $response['id'] = $rol['id'];
             $response['nombre'] = ucfirst($rol['nombre']);
-            $response['rows'] = $model->count();
+            $response['rows'] = $model->count(null, 'tabla_id', '=', -1);
         }else{
             $response = crearResponse(
                 'nombre_duplicado',
@@ -146,7 +146,7 @@ class RolesController extends Admin
                 'Rol Eliminado.'
             );
             $response['id'] = $id;
-            $response['rows'] = $model->count();
+            $response['rows'] = $model->count(null, 'tabla_id', '=', -1);
         }
         return $response;
     }

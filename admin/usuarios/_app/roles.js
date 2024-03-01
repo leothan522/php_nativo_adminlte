@@ -22,6 +22,7 @@ function editRol(id) {
     ajaxRequest({url: '_request/RolesRequest.php', data: { id: id, opcion: 'edit' } }, function (data) {
         if (data.result){
             show(data);
+
         }
     } );
 }

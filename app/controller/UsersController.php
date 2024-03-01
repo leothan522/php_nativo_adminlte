@@ -113,9 +113,9 @@ class UsersController extends Admin
             $response['name'] = $user['name'];
             $response['email'] = $user['email'];
             $response['telefono'] = '<p class="text-center">' . $user['telefono'] . '</p>';
-            $response['role'] = '<p class="text-center">' . verRoleUsuario($user['role']) . '</p>';
+            $response['role'] = '<p class="text-center">' . $this->getRol($user['role'], $user['role_id']) . '</p>';
             $response['item'] = '<p class="text-center">' . $model->count(1) . '</p>';
-            $response['estatus'] = '<p class="text-center">' . verEstatusUsuario($user['estatus']) . '</p>';
+            $response['estatus'] = '<p class="text-center">' . $this->verEstatusUsuario($user['estatus']) . '</p>';
             $response['total'] = $model->count(1);
             $response['btn_editar'] = validarPermisos('usuarios.edit');
             $response['btn_eliminar'] = validarPermisos('usuarios.destroy');
@@ -279,7 +279,7 @@ class UsersController extends Admin
                 $response['title'] = 'Cambios Guardados.';
                 $response['message'] = $name . " Actualizado.";
                 $response['table_telefono'] = '<p class="text-center">' . $response['telefono'] . '</p>';
-                $response['table_role'] = '<p class="text-center">' . verRoleUsuario($response['role']) . '</p>';
+                $response['table_role'] = '<p class="text-center">' . $this->getRol($response['role'], $response['role']) . '</p>';
             } else {
                 $response = crearResponse('no_cambios');
             }

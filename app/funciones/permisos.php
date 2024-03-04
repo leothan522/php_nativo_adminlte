@@ -1,22 +1,53 @@
 <?php
-use app\model\User;
 
-function validarPermisos($key = null): bool
+function permisos(): array
 {
-    $model = new User();
-    $user = $model->find($_SESSION['id']);
-    $acceso = false;
+    return $permisos = [
+        [
+            'permiso' => 'usuarios.index',
+            'text' => 'Usuarios',
+            'opciones' => [
+                [
+                    'permiso' => 'usuarios.create',
+                    'text' => 'Crear Usuarios'
+                ],
+                [
+                    'permiso' => 'usuarios.edit',
+                    'text' => 'Editar Usuarios'
+                ],
+                [
+                    'permiso' => 'usuarios.estatus',
+                    'text' => 'Cambiar Estatus'
+                ],
+                [
+                    'permiso' => 'usuarios.reset',
+                    'text' => 'Reset Password'
+                ],
+                [
+                    'permiso' => 'usuarios.destroy',
+                    'text' => 'Borrar Usuarios'
+                ]
+            ]
+        ],
 
-    if (
-        ((leerJson($user['permisos'], $key) || $user['role'] == 99) && ($user['band'] == 1 && $user['estatus'] == 1)) ||
-        $user['role'] == 100
-    ){
-        $acceso = true;
-    }
+        /*
+         * Ejemplo de permiso
+         *
+         *
+        [ 'permiso' => 'usuarios.index',
+            'text' => 'Usuarios',
+            'opciones' => [
+                [
+                    'permiso' => 'usuarios.create',
+                    'text' => 'Crear Usuarios'
+                ],
+                [
+                    'permiso' => 'usuarios.edit',
+                    'text' => 'Editar Usuarios'
+                ]
+            ]
+        ]
 
-    if ($key == "root" && $user['role'] != 100){
-        $acceso = false;
-    }
-
-    return $acceso;
+        */
+    ];
 }

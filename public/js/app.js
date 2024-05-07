@@ -127,6 +127,13 @@ function is_json(str) {
     return true;
 }
 
+//validar selector
+function existeElemento(id) {
+    return $(id).length > 0;
+}
+
+
+
 /*
 * Elemplo Soliciutud Ajax (login.js)
 

@@ -17,7 +17,16 @@ function sidebar($modulo = null): ?string
             'badge' => null,
             'treeview' => []
         ],
-
+        /*[
+            'permiso' => validarPermisos('pagos.index'),
+            'url' => public_url('admin/pagos'),
+            'active' => $modulo == 'pagos.index',
+            'icono' => '<i class="nav-icon fas fa-money-check"></i>',
+            'titulo' => 'Validación Pagos',
+            'badge' => null,
+            'treeview' => []
+        ],*/
+        
         [
             'permiso' => validarPermisos('territorio.index') || validarPermisos('usuarios.index') || validarPermisos('root'),
             'url' => '#',
@@ -30,7 +39,7 @@ function sidebar($modulo = null): ?string
                     'permiso' => validarPermisos('usuarios.index'),
                     'url' => public_url('admin/usuarios'),
                     'active' => $modulo == 'usuarios.index',
-                    'icono' => '<i class="fas fa-users"></i> ',
+                    'icono' => '<i class="fas fa-users-cog nav-icon"></i>',
                     'titulo' => 'Usuarios'
                 ],
                 [

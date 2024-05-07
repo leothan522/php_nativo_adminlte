@@ -96,11 +96,11 @@ $controller->index();
             <p class="mb-1 mt-3">
                 <a href="../forgot-password">Olvidé mi contraseña</a>
             </p>
-			<?php if (config('app_register') == "true"){ ?>
-            <p class="mb-0">
-                <a href="../register" class="text-center">Registrarse</a>
-            </p>
-			<?php } ?>
+            <?php if (config('app_register') == "true"){ ?>
+                <p class="mb-0">
+                    <a href="../register" class="text-center">Registrarse</a>
+                </p>
+            <?php } ?>
         </div>
         <!-- /.card-body -->
 
@@ -119,8 +119,8 @@ $controller->index();
 <script src="<?php asset('app/resources/adminlte/dist/js/adminlte.min.js'); ?>"></script>
 <!-- SweetAlert2 -->
 <script src="<?php asset('app/resources/adminlte/plugins/sweetalert2/sweetalert2.min.js'); ?>"></script>
-<script src="<?php asset('public/js/sweetalert-app.js'); ?>"></script>
-<script src="<?php asset('public/js/app.js'); ?>"></script>
+<script src="<?php asset('public/js/sweetalert-app.js', true); ?>"></script>
+<script src="<?php asset('public/js/app.js', true); ?>"></script>
 
 <script src="<?php asset('login/_app/login.js', true); ?>"></script>
 </body>

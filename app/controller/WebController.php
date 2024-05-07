@@ -14,6 +14,24 @@ class WebController extends Auth
         }
     }
 
+    public  function verEstatusUsuario($estatus, $icon = true): string
+    {
+        if (!$icon) {
+            $suspendido = "Suspendido";
+            $activado = "Activo";
+        } else {
+            $suspendido = '<i class="fas fa-user-times"></i>';
+            $activado = '<i class="fa fa-user-check"></i>';
+        }
+
+        $status = [
+            '0' => '<span class="text-danger">' . $suspendido . '</span>',
+            '1' => '<span class="text-success">' . $activado . '</span>'/*,
+        '2' => '<span class="text-success">Confirmado</span>'*/
+        ];
+        return $status[$estatus];
+    }
+
     public function getRol($role, $role_id): mixed
     {
         switch ($role) {
@@ -39,22 +57,5 @@ class WebController extends Auth
         return $verRole;
     }
 
-    public  function verEstatusUsuario($estatus, $icon = true): string
-    {
-        if (!$icon) {
-            $suspendido = "Suspendido";
-            $activado = "Activo";
-        } else {
-            $suspendido = '<i class="fas fa-user-times"></i>';
-            $activado = '<i class="fa fa-user-check"></i>';
-        }
-
-        $status = [
-            '0' => '<span class="text-danger">' . $suspendido . '</span>',
-            '1' => '<span class="text-success">' . $activado . '</span>'/*,
-        '2' => '<span class="text-success">Confirmado</span>'*/
-        ];
-        return $status[$estatus];
-    }
 
 }

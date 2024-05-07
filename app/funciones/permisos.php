@@ -28,7 +28,7 @@ function permisos(): array
                     'text' => 'Borrar Usuarios'
                 ]
             ]
-        ],
+        ]
 
         /*
          * Ejemplo de permiso

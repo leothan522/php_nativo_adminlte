@@ -16,7 +16,7 @@
 
 
 -- Volcando estructura de base de datos para dashboard_adminlte
-CREATE DATABASE IF NOT EXISTS `dashboard_adminlte` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci */ /*!80016 DEFAULT ENCRYPTION='N' */;
+CREATE DATABASE IF NOT EXISTS `dashboard_adminlte` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_spanish_ci */ /*!80016 DEFAULT ENCRYPTION='N' */;
 USE `dashboard_adminlte`;
 
 -- Volcando estructura para tabla dashboard_adminlte.parametros
@@ -28,10 +28,10 @@ CREATE TABLE IF NOT EXISTS `parametros` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish_ci;
 
--- Volcando datos para la tabla dashboard_adminlte.parametros: ~0 rows (aproximadamente)
+-- Volcando datos para la tabla dashboard_adminlte.parametros: ~3 rows (aproximadamente)
 INSERT INTO `parametros` (`id`, `nombre`, `tabla_id`, `valor`) VALUES
-	(1, 'fecha_compilacion', NULL, '2024-03-01 10:13:50'),
-	(2, 'version de php', NULL, '8');
+	(1, 'fecha_compilacion', NULL, '2024-05-07 14:39:21'),
+	(2, 'php_version', NULL, 'v.8');
 
 -- Volcando estructura para tabla dashboard_adminlte.users
 CREATE TABLE IF NOT EXISTS `users` (
@@ -46,6 +46,7 @@ CREATE TABLE IF NOT EXISTS `users` (
   `role` int NOT NULL DEFAULT '0',
   `role_id` int DEFAULT '0',
   `permisos` text CHARACTER SET utf8mb4 COLLATE utf8mb4_spanish_ci,
+  `acceso_municipio` text CHARACTER SET utf8mb4 COLLATE utf8mb4_spanish_ci,
   `estatus` int NOT NULL DEFAULT '1',
   `band` int NOT NULL DEFAULT '1',
   `created_at` date DEFAULT NULL,
@@ -56,10 +57,10 @@ CREATE TABLE IF NOT EXISTS `users` (
 ) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish_ci;
 
 -- Volcando datos para la tabla dashboard_adminlte.users: ~3 rows (aproximadamente)
-INSERT INTO `users` (`id`, `name`, `email`, `password`, `telefono`, `token`, `date_token`, `path`, `role`, `role_id`, `permisos`, `estatus`, `band`, `created_at`, `updated_at`, `deleted_at`, `dispositivo`) VALUES
-	(1, 'Yonathan Castillo', 'leothan522@gmail.com', '$2y$10$Hx0iUXf01RZUqq0xBHyVueBg3FoiGpCEtSTZ8tU0rAK30RffBMiAC', '(0424) 338-66.00', NULL, NULL, NULL, 100, 0, NULL, 1, 1, '2023-08-12', NULL, NULL, 0),
-	(2, 'Antonny Maluenga', 'gabrielmalu15@gmail.com', '$2y$10$PgRJxdl2oGyq8/vMjU6a1Oq28oPjiWHF1gKQN6pIGtOsoeBaMufee', '(0412) 199-56.47', NULL, NULL, NULL, 100, 0, NULL, 1, 1, '2023-08-28', '2024-03-01', NULL, 0),
-	(3, 'Administrador', 'admin@adminlte.com', '$2y$10$5Fl3weju4a/JQi/x92lIMuXgXUr0dsxp6CIIikPNtNRyjDUlxj4ge', '(0424) 338-66.00', NULL, NULL, NULL, 99, 0, NULL, 1, 1, '2023-09-28', NULL, NULL, 0);
+INSERT INTO `users` (`id`, `name`, `email`, `password`, `telefono`, `token`, `date_token`, `path`, `role`, `role_id`, `permisos`, `acceso_municipio`, `estatus`, `band`, `created_at`, `updated_at`, `deleted_at`, `dispositivo`) VALUES
+	(1, 'Yonathan Castillo', 'leothan522@gmail.com', '$2y$10$D2ohRbgCgGaECIjGLM0GHunPKCf9xsJIl1T0a4KOQIW0iIFRTInJm', '(0424) 338-66.00', NULL, NULL, NULL, 100, 0, NULL, NULL, 1, 1, '2023-08-12', '2023-10-02', NULL, 0),
+	(2, 'Antonny Maluenga', 'gabrielmalu15@gmail.com', '$2y$10$FsuOX9NnpZ85q2LNV5Nw5OGY4n/IREiuYdWKlgKZtVJ6kmedGXkIu', '(0412) 199-56.47', NULL, NULL, NULL, 100, 0, NULL, NULL, 1, 1, '2023-08-28', '2024-05-07', NULL, 0),
+	(3, 'Administrador', 'admin@alguarisa.com', '$2y$10$5Fl3weju4a/JQi/x92lIMuXgXUr0dsxp6CIIikPNtNRyjDUlxj4ge', '(0424) 338-66.00', NULL, NULL, NULL, 99, 0, '{"usuarios.index":true}', NULL, 0, 0, '2023-09-28', NULL, '2023-09-29', 0);
 
 /*!40103 SET TIME_ZONE=IFNULL(@OLD_TIME_ZONE, 'system') */;
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;

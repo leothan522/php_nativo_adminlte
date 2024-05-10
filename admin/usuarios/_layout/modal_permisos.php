@@ -1,6 +1,6 @@
 <!-- Modal -->
 <div class="modal fade" id="modal_permisos">
-    <div class="modal-dialog modal-lg">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
         <div class="modal-content">
             <form id="form_permisos_usuario">
                 <div class="modal-header bg-primary">

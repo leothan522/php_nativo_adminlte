@@ -1,6 +1,8 @@
 <?php
 session_start();
 require_once "../../vendor/autoload.php";
+
+use app\model\Parametros;
 use app\model\User;
 
 $response = array();
@@ -36,12 +38,15 @@ if ($_POST) {
                         $existeEmail = $model->existe('email', '=', $email,null, 1);
                         if (!$existeEmail){
 
+
                             $data = [
                                 $name,
                                 $email,
                                 $password,
                                 $telefono,
                                 0,
+                                null,
+                                null,
                                 $created_at
                             ];
 

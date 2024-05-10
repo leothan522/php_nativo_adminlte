@@ -6,7 +6,7 @@
 
 <!-- Modal -->
 <div class="modal fade" id="modal_edit_usuarios">
-    <div class="modal-dialog modal-lg">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
                 <h4 class="modal-title">Editar Usuario</h4>
